@@ -25,6 +25,7 @@ func (v *version) Print() {
 	fmt.Printf("Compiler Environment: %s \n", string(v.env))
 }
 
+var verStr string
 var tagStr string
 var uptStr string
 var envStr string
@@ -33,7 +34,7 @@ var Version = getVersion()
 
 func getVersion() *version {
 	return &version{
-		ver:  "v0.0.1",
+		ver:  verStr,
 		tag:  tagStr,
 		upt:  uptStr,
 		env:  envStr,
