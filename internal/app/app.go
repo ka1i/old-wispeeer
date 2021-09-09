@@ -5,7 +5,9 @@ import (
 	"log"
 	"os"
 
+	"github.com/ka1i/wispeeer/internal/app/cmd"
 	"github.com/ka1i/wispeeer/internal/pkg/usage"
+	"github.com/ka1i/wispeeer/internal/pkg/utils"
 	"github.com/ka1i/wispeeer/pkg/version"
 )
 
@@ -30,7 +32,15 @@ func barry(argc int, argv []string) {
 	var err error
 	switch argv[0] {
 	case "-i", "init":
-		log.Println("init")
+		if argc > 2 {
+			if utils.IsValid(argv[1]) {
+				err = cmd.Initialzation(argv[1])
+			} else {
+				err = fmt.Errorf("invalid name")
+			}
+		} else {
+			err = fmt.Errorf("wispeeer init <ka1i.github.io>")
+		}
 	case "-n", "new":
 		log.Println("new")
 	case "-g", "generate":

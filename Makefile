@@ -8,6 +8,9 @@ all: build
 build:          ## build with native env.
 	@./scripts/build.sh ${SOURCE} ${BINARY}
 
+.PHONY: install
+install:        ## install this app.
+	@./scripts/install.sh ${PREFIX}
 
 .PHONY: clean
 clean:          ## Clean build cache.

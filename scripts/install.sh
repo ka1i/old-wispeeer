@@ -1,7 +1,7 @@
 #!/bin/bash --posix
 
-# Args: source, target
-# eg: build.sh ./main.go ./bin/program
+# Args: source
+# eg: install.sh ./main.go
 
 AUTH=$(whoami)
 ENV=$(uname -snr)
@@ -9,13 +9,13 @@ VER=$(cat .version)
 UPT=$(date +"%Y/%m/%d %T %z")
 TAG=$(echo $(git rev-parse --short HEAD)$([ -n "$(git status -s)"  ] && echo "-dev" || echo ""))
 
-echo "making $2"
+echo "$1 installing ..."
 mkdir -p bin
 echo "Version:${TAG}"
 
 go mod tidy
 
-go build -ldflags "                                  \
+go install -ldflags "                                \
     -installsuffix 'static'                          \
     -s -w                                            \
     -X '$(go list -m)/pkg/version.verStr=${VER}'     \
@@ -24,4 +24,4 @@ go build -ldflags "                                  \
     -X '$(go list -m)/pkg/version.envStr=${ENV}'     \
     -X '$(go list -m)/pkg/version.authStr=${AUTH}'   \
     "                                                \
-    -o $2 $1
+    ./...
