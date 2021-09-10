@@ -38,6 +38,11 @@ func NewPost(title string) error {
 	return nil
 }
 
+func NewPage(title string) error {
+	fmt.Println("page")
+	return nil
+}
+
 func checkAndFixDIR(dir string) {
 	if !utils.IsExist(dir) {
 		os.Mkdir(dir, os.ModePerm)

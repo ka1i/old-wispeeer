@@ -50,16 +50,20 @@ func barry(argc int, argv []string) {
 	case "-n", "new":
 		if argc > 2 {
 			if config.Configure.Error == nil {
-				if utils.IsValid(argv[1]) {
-					err = cmd.NewPost(argv[1])
+				if argv[1] == "page" && argc > 3 {
+					if utils.IsValid(argv[2]) {
+						err = cmd.NewPage(argv[2])
+					}
 				} else {
-					err = fmt.Errorf("invalid title")
+					if utils.IsValid(argv[1]) {
+						err = cmd.NewPost(argv[1])
+					}
 				}
 			} else {
 				err = config.Configure.Error
 			}
 		} else {
-			err = fmt.Errorf("wispeeer new <title>")
+			err = fmt.Errorf("wispeeer new [post] <title>")
 		}
 	case "-g", "generate":
 		log.Println("generate")

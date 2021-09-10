@@ -12,7 +12,7 @@ first execute the command "wispeeer init <Blog directory>" to initialize the blo
      ------- < Commands Arguments > -------
 optional:
   -i, init          Create a new blog. (e.g wispeeer -i <alias>)
-  -n, new           Create a new post. (e.g wispeeer -n <title>)
+  -n, new           Create a new post or page. (e.g wispeeer -n [post] <title>)
   -g, generate      Generate static files. (e.g wispeeer -g)
   -s, server        Start the server. (e.g wispeeer -s)
   -d, deploy        Deploy your website. (e.g wispeeer -d)
