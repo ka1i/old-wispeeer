@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/ka1i/wispeeer/internal/app/cmd"
 	"github.com/ka1i/wispeeer/internal/pkg/usage"
 	"github.com/ka1i/wispeeer/internal/pkg/utils"
+	"github.com/ka1i/wispeeer/pkg/config"
 	"github.com/ka1i/wispeeer/pkg/version"
 )
 
@@ -30,6 +32,10 @@ func (a *app) Wispeeer() int {
 
 func barry(argc int, argv []string) {
 	var err error
+	defer utils.Timer("wispeeer ", time.Now())
+
+	config.Configure.Init()
+
 	switch argv[0] {
 	case "-i", "init":
 		if argc > 2 {
@@ -42,7 +48,19 @@ func barry(argc int, argv []string) {
 			err = fmt.Errorf("wispeeer init <ka1i.github.io>")
 		}
 	case "-n", "new":
-		log.Println("new")
+		if argc > 2 {
+			if config.Configure.Error == nil {
+				if utils.IsValid(argv[1]) {
+					err = cmd.NewPost(argv[1])
+				} else {
+					err = fmt.Errorf("invalid title")
+				}
+			} else {
+				err = config.Configure.Error
+			}
+		} else {
+			err = fmt.Errorf("wispeeer new <title>")
+		}
 	case "-g", "generate":
 		log.Println("generate")
 	case "-s", "server":

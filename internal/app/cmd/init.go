@@ -7,7 +7,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"time"
 
 	"github.com/ka1i/wispeeer/internal/pkg/utils"
 	assets "github.com/ka1i/wispeeer/pkg/asset"
@@ -18,7 +17,6 @@ import (
 func Initialzation(title string) error {
 	var err error
 
-	defer utils.Timer("wispeeer ", time.Now())
 	if utils.IsExist(title) {
 		return fmt.Errorf("%s: File exists", title)
 	}

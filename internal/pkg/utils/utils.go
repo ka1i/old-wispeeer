@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
+	"strings"
 	"time"
 )
 
@@ -31,4 +33,22 @@ func IsValid(str string) bool {
 	}
 	result := reg.FindAllString(str, -1)
 	return len(result) <= 0
+}
+
+// GetWorkspace ...
+func GetWorkspace() string {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		fmt.Println("error")
+	}
+	return strings.Replace(dir, "\\", "/", -1)
+}
+
+// SafeFormat ...
+func SafeFormat(origin string, spec string, join string, with string) string {
+	spell := strings.Fields(origin)
+	concat := strings.Join(spell, spec)
+	newspell := []string{concat, join}
+	r := strings.Join(newspell, with)
+	return r
 }

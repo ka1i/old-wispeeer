@@ -1,0 +1,30 @@
+# Site
+title: Welcome to wisper
+subtitle: wispeeer wisper
+description: 'Generate by Wispeeer<br> <a href="https://github.com/Wispeeer/wispeeer">wispeeer</a>.'
+keywords: ''
+author: Mardan M
+language: en
+timezone: Asia/Shanghai
+
+# Urls
+root: 
+permalink: /website/
+
+# Directory
+post_dir: post
+source_dir: source
+public_dir: public
+
+# Pagination
+per_page: 9
+pagination_dir: page
+
+## Themes
+theme: wisper
+
+# Deployment
+deploy:
+  type: 'git'
+  repo: 
+  branch: master
