@@ -16,7 +16,7 @@ func init() {
 	log.SetOutput(os.Stdout)
 }
 
-func Println(task string) *logrus.Entry {
+func Task(task string) *logrus.Entry {
 	return log.WithFields(logrus.Fields{
 		"task": task,
 	})

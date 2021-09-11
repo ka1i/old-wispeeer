@@ -1,0 +1,13 @@
+# robots.txt
+User-agent: *
+Allow: /
+Allow: /website
+Allow: /archives/
+
+Disallow: /js/
+Disallow: /css/
+Disallow: /lib/
+Disallow: /images/
+Disallow: /about/
+
+Sitemap: http://www.mardan.com/sitemap.xml

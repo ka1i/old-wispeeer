@@ -67,7 +67,7 @@ func barry(argc int, argv []string) {
 			err = fmt.Errorf("wispeeer new [post] <title>")
 		}
 	case "-g", "generate":
-		fmt.Println("generate")
+		err = run.Generate()
 	case "-s", "server":
 		fmt.Println("server")
 	case "-d", "deploy":
@@ -80,7 +80,7 @@ func barry(argc int, argv []string) {
 		err = fmt.Errorf("wispeeer usage: wispeeer -h")
 	}
 	if err != nil {
-		logeer.Println("app").Error(err)
+		logeer.Task("app").Error(err)
 	}
 }
 

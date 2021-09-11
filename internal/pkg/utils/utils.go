@@ -28,7 +28,7 @@ func IsExist(path string) bool {
 func IsValid(str string) bool {
 	reg := regexp.MustCompile(`[\\\\/:*?\"<>|]`)
 	if reg == nil {
-		logeer.Println("app").Error("Title Incorrect")
+		logeer.Task("app").Error("Title Incorrect")
 		return false
 	}
 	result := reg.FindAllString(str, -1)
@@ -39,7 +39,7 @@ func IsValid(str string) bool {
 func GetWorkspace() string {
 	dir, err := os.Getwd()
 	if err != nil {
-		logeer.Println("app").Error(err)
+		logeer.Task("app").Error(err)
 	}
 	return strings.Replace(dir, "\\", "/", -1)
 }

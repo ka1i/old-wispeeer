@@ -12,15 +12,15 @@ import (
 //Initialzation ...
 func (c *CMD) Initialzation(title string) error {
 	var err error
-	logeer.Println("init").Infof("Location: %s", utils.GetWorkspace())
+	logeer.Task("init").Infof("Location: %s", utils.GetWorkspace())
 
 	if utils.IsExist(title) {
 		return fmt.Errorf("%s: File exists", title)
 	}
 
-	logeer.Println("init").Infof("wispeeer init %s", title)
+	logeer.Task("init").Infof("wispeeer init %s", title)
 
-	logeer.Println("init").Info("unpkg embed assets")
+	logeer.Task("init").Info("unpkg embed assets")
 
 	var storage = assets.GetStorage()
 	fs := storage.Fs
