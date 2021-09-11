@@ -2,7 +2,6 @@ package app
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"github.com/ka1i/wispeeer/internal/pkg/usage"
 	"github.com/ka1i/wispeeer/internal/pkg/utils"
 	"github.com/ka1i/wispeeer/pkg/config"
+	logeer "github.com/ka1i/wispeeer/pkg/log"
 	"github.com/ka1i/wispeeer/pkg/version"
 )
 
@@ -35,12 +35,13 @@ func barry(argc int, argv []string) {
 	defer utils.Timer("wispeeer ", time.Now())
 
 	config.Configure.Init()
+	run := cmd.Run()
 
 	switch argv[0] {
 	case "-i", "init":
 		if argc > 2 {
 			if utils.IsValid(argv[1]) {
-				err = cmd.Initialzation(argv[1])
+				err = run.Initialzation(argv[1])
 			} else {
 				err = fmt.Errorf("invalid name")
 			}
@@ -52,11 +53,11 @@ func barry(argc int, argv []string) {
 			if config.Configure.Error == nil {
 				if argv[1] == "page" && argc > 3 {
 					if utils.IsValid(argv[2]) {
-						err = cmd.NewPage(argv[2])
+						err = run.NewPage(argv[2])
 					}
 				} else {
 					if utils.IsValid(argv[1]) {
-						err = cmd.NewPost(argv[1])
+						err = run.NewPost(argv[1])
 					}
 				}
 			} else {
@@ -66,11 +67,11 @@ func barry(argc int, argv []string) {
 			err = fmt.Errorf("wispeeer new [post] <title>")
 		}
 	case "-g", "generate":
-		log.Println("generate")
+		fmt.Println("generate")
 	case "-s", "server":
-		log.Println("server")
+		fmt.Println("server")
 	case "-d", "deploy":
-		log.Println("deploy")
+		fmt.Println("deploy")
 	case "-h", "--help", "help":
 		usage.Usage()
 	case "-v", "--version", "version":
@@ -79,7 +80,7 @@ func barry(argc int, argv []string) {
 		err = fmt.Errorf("wispeeer usage: wispeeer -h")
 	}
 	if err != nil {
-		log.Println(err)
+		logeer.Println("app").Error(err)
 	}
 }
 

@@ -2,12 +2,12 @@ package utils
 
 import (
 	"fmt"
-	"log"
 	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
+
+	logeer "github.com/ka1i/wispeeer/pkg/log"
 )
 
 // Timer ...
@@ -28,7 +28,7 @@ func IsExist(path string) bool {
 func IsValid(str string) bool {
 	reg := regexp.MustCompile(`[\\\\/:*?\"<>|]`)
 	if reg == nil {
-		log.Println("Title Incorrect")
+		logeer.Println("app").Error("Title Incorrect")
 		return false
 	}
 	result := reg.FindAllString(str, -1)
@@ -37,9 +37,9 @@ func IsValid(str string) bool {
 
 // GetWorkspace ...
 func GetWorkspace() string {
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	dir, err := os.Getwd()
 	if err != nil {
-		fmt.Println("error")
+		logeer.Println("app").Error(err)
 	}
 	return strings.Replace(dir, "\\", "/", -1)
 }
@@ -51,4 +51,10 @@ func SafeFormat(origin string, spec string, join string, with string) string {
 	newspell := []string{concat, join}
 	r := strings.Join(newspell, with)
 	return r
+}
+
+func CheckDir(dir string) {
+	if !IsExist(dir) {
+		os.Mkdir(dir, os.ModePerm)
+	}
 }

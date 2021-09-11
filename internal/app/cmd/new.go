@@ -1,74 +1,63 @@
 package cmd
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"path"
 	"time"
 
+	"github.com/ka1i/wispeeer/internal/pkg/tools"
 	"github.com/ka1i/wispeeer/internal/pkg/utils"
-	"github.com/ka1i/wispeeer/pkg/config"
 	logeer "github.com/ka1i/wispeeer/pkg/log"
 )
 
 // NewPost ...
-func NewPost(title string) error {
+func (c *CMD) NewPost(title string) error {
 	logeer.Println("new").Infof("Location: %s", utils.GetWorkspace())
-	options := config.Configure.Options
 
 	// 检查发布文件夹状态
-	checkAndFixDIR(path.Join(utils.GetWorkspace(), options.SourceDir))
-	checkAndFixDIR(path.Join(utils.GetWorkspace(), options.SourceDir, options.PostDir))
+	utils.CheckDir(path.Join(utils.GetWorkspace(), c.Options.SourceDir))
+	utils.CheckDir(path.Join(utils.GetWorkspace(), c.Options.SourceDir, c.Options.PostDir))
 
 	title = utils.SafeFormat(title, " ", "", "")
 	var safeName = utils.SafeFormat(title, "_", "md", ".")
-	var filePath = path.Join(utils.GetWorkspace(), options.SourceDir, options.PostDir, safeName)
+	var filePath = path.Join(utils.GetWorkspace(), c.Options.SourceDir, c.Options.PostDir, safeName)
 	if utils.IsExist(filePath) {
 		return fmt.Errorf("article %v is exist", safeName)
 	}
 	// 创建文章文件
-	err := createMarkdown(filePath, title)
+	err := tools.CreateMarkdown(filePath, title, "void")
 	if err != nil {
 		return fmt.Errorf("create article %s is failed", safeName)
 	}
+	showInfo(title, safeName)
+	return nil
+}
+
+func (c *CMD) NewPage(title string) error {
+	logeer.Println("new").Infof("Location: %s", utils.GetWorkspace())
+
+	// 检查发布文件夹状态
+	title = utils.SafeFormat(title, " ", "", "")
+	utils.CheckDir(path.Join(utils.GetWorkspace(), c.Options.SourceDir))
+
+	utils.CheckDir(path.Join(utils.GetWorkspace(), c.Options.SourceDir, title))
+
+	var safeName = "index.md"
+	var filePath = path.Join(utils.GetWorkspace(), c.Options.SourceDir, title, safeName)
+	if utils.IsExist(filePath) {
+		return fmt.Errorf("page %v is exist", safeName)
+	}
+	// 创建文件
+	err := tools.CreateMarkdown(filePath, title, title)
+	if err != nil {
+		return fmt.Errorf("create page %s is failed", safeName)
+	}
+	showInfo(title, safeName)
+	return nil
+}
+
+func showInfo(title string, safeName string) {
 	fmt.Printf("title  : %s\n", title)
 	fmt.Printf("posted : %s\n", time.Now().Format("2006-01-02 15:04:05"))
 	fmt.Printf("Created: %s\n", safeName)
-	return nil
-}
-
-func NewPage(title string) error {
-	fmt.Println("page")
-	return nil
-}
-
-func checkAndFixDIR(dir string) {
-	if !utils.IsExist(dir) {
-		os.Mkdir(dir, os.ModePerm)
-	}
-}
-
-func createMarkdown(fileName string, title string) error {
-	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0666)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	fileWrite := bufio.NewWriter(file)
-	//Markdown header
-	fileWrite.WriteString("------\n")
-	fileWrite.WriteString("title: " + title + "\n")
-	fileWrite.WriteString("posted: " + time.Now().Format("2006-01-02 15:04:05") + "\n")
-	fileWrite.WriteString("tags: void\n")
-	fileWrite.WriteString("categories: void\n")
-	fileWrite.WriteString("------\n")
-	fileWrite.WriteString("\n\n")
-	fileWrite.WriteString("# Absract\n")
-	fileWrite.WriteString("<!-- more -->\n\n")
-	fileWrite.WriteString("# Reference\n\n")
-
-	//Flush buffer
-	fileWrite.Flush()
-	return nil
 }
