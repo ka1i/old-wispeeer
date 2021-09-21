@@ -2,10 +2,10 @@ package assets
 
 import "embed"
 
-//go:embed wisper/*
+//go:embed github.io/*
 var fs embed.FS
 
-var root = "wisper"
+var root = "github.io"
 
 type Storage struct {
 	Fs   embed.FS

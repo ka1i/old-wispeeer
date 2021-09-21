@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"path"
+	"path/filepath"
 	"time"
 
 	"github.com/ka1i/wispeeer/internal/pkg/tools"
@@ -29,7 +30,10 @@ func (c *CMD) NewPost(title string) error {
 	if err != nil {
 		return fmt.Errorf("create article %s is failed", safeName)
 	}
-	showInfo(title, safeName)
+	err = showInfo(filePath, title, safeName)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -42,7 +46,7 @@ func (c *CMD) NewPage(title string) error {
 
 	utils.CheckDir(path.Join(utils.GetWorkspace(), c.Options.SourceDir, title))
 
-	var safeName = "index.md"
+	var safeName = c.IndexStr
 	var filePath = path.Join(utils.GetWorkspace(), c.Options.SourceDir, title, safeName)
 	if utils.IsExist(filePath) {
 		return fmt.Errorf("page %v is exist", safeName)
@@ -52,12 +56,20 @@ func (c *CMD) NewPage(title string) error {
 	if err != nil {
 		return fmt.Errorf("create page %s is failed", safeName)
 	}
-	showInfo(title, safeName)
+	err = showInfo(filePath, title, safeName)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func showInfo(title string, safeName string) {
+func showInfo(filePath string, title string, safeName string) error {
 	fmt.Printf("title  : %s\n", title)
 	fmt.Printf("posted : %s\n", time.Now().Format("2006-01-02 15:04:05"))
-	fmt.Printf("Created: %s\n", safeName)
+	filepath, err := filepath.Rel(utils.GetWorkspace(), filePath)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Created: %s\n", filepath)
+	return nil
 }

@@ -35,7 +35,7 @@ type Urls struct {
 
 // Directory ...
 type Directory struct {
-	PostDir   string `yaml:"post_dir" default:"post"`
+	PostDir   string `yaml:"post_dir" default:"posts"`
 	SourceDir string `yaml:"source_dir" default:"source"`
 	PublicDir string `yaml:"public_dir" default:"public"`
 }
