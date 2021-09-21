@@ -58,3 +58,17 @@ func CheckDir(dir string) {
 		os.Mkdir(dir, os.ModePerm)
 	}
 }
+
+// IsDir ...
+func IsDir(path string) bool {
+	s, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return s.IsDir()
+}
+
+// IsFile ...
+func IsFile(path string) bool {
+	return !IsDir(path)
+}

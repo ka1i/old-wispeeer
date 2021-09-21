@@ -1,7 +1,11 @@
 package cmd
 
 import (
+	"fmt"
+	"io/ioutil"
 	"path"
+	"path/filepath"
+	"strings"
 
 	"github.com/ka1i/wispeeer/internal/pkg/tools"
 	"github.com/ka1i/wispeeer/internal/pkg/utils"
@@ -22,5 +26,36 @@ func (c *CMD) Generate() error {
 	}
 
 	logeer.Task("generate").Infof("public in: %v", c.Options.PublicDir)
+
+	// kids! run
+	err = prepare(c.Options.SourceDir)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func prepare(startDIR string) error {
+	files, err := ioutil.ReadDir(startDIR)
+	if err != nil {
+		return err
+	}
+	for _, f := range files {
+		if f.Name()[0] == 46 {
+			continue
+		}
+		filefullName := path.Join(startDIR, f.Name())
+		pathLevelSlice := strings.Split(filepath.ToSlash((filepath.Dir(filefullName))), "/")
+		pathLevel := len(pathLevelSlice)
+		if utils.IsFile(filefullName) {
+			fmt.Println(pathLevel, "FILE", filefullName)
+		} else {
+			fmt.Println(pathLevel, "DIR", filefullName)
+			err := prepare(filefullName)
+			if err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
