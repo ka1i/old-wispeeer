@@ -1,4 +1,4 @@
-package logeer
+package loger
 
 import (
 	"os"
@@ -14,6 +14,7 @@ func init() {
 		TimestampFormat: "15:04:05",
 	})
 	log.SetOutput(os.Stdout)
+	log.SetLevel(logrus.DebugLevel)
 }
 
 func Task(task string) *logrus.Entry {

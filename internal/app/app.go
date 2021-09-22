@@ -9,7 +9,7 @@ import (
 	"github.com/ka1i/wispeeer/internal/pkg/usage"
 	"github.com/ka1i/wispeeer/internal/pkg/utils"
 	"github.com/ka1i/wispeeer/pkg/config"
-	logeer "github.com/ka1i/wispeeer/pkg/log"
+	loger "github.com/ka1i/wispeeer/pkg/log"
 	"github.com/ka1i/wispeeer/pkg/version"
 )
 
@@ -80,7 +80,7 @@ func barry(argc int, argv []string) {
 		err = fmt.Errorf("wispeeer usage: wispeeer -h")
 	}
 	if err != nil {
-		logeer.Task("app").Error(err)
+		loger.Task("app").Error(err)
 	}
 }
 

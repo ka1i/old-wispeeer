@@ -54,7 +54,7 @@ func FileCopy(src string, dst string) error {
 
 		destination, err := os.Create(dst)
 		if err != nil {
-			return fmt.Errorf("fail to create file %v", dst)
+			return fmt.Errorf("fail to create file %v:%v", dst, err)
 		}
 		defer destination.Close()
 		_, err = io.Copy(destination, source)

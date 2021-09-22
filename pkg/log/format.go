@@ -1,4 +1,4 @@
-package logeer
+package loger
 
 import (
 	"fmt"
