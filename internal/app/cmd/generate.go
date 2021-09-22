@@ -28,14 +28,14 @@ func (c *CMD) Generate() error {
 	logeer.Task("generate").Infof("public in: %v", c.Options.PublicDir)
 
 	// kids! run
-	err = prepare(c.Options.SourceDir)
+	err = c.prepare(c.Options.SourceDir)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func prepare(startDIR string) error {
+func (c *CMD) prepare(startDIR string) error {
 	files, err := ioutil.ReadDir(startDIR)
 	if err != nil {
 		return err
@@ -48,10 +48,35 @@ func prepare(startDIR string) error {
 		pathLevelSlice := strings.Split(filepath.ToSlash((filepath.Dir(filefullName))), "/")
 		pathLevel := len(pathLevelSlice)
 		if utils.IsFile(filefullName) {
-			fmt.Println(pathLevel, "FILE", filefullName)
+			if pathLevel == 1 {
+				fmt.Printf("[COPY] ")
+			}
+			suffix := path.Ext(f.Name())
+			title := strings.TrimSuffix(f.Name(), suffix)
+
+			if pathLevel == 2 && suffix == ".md" {
+				assetRoot := path.Join(startDIR, title)
+				if pathLevelSlice[1] == c.Options.PostDir {
+					fmt.Printf("[POST] ")
+					fmt.Println(pathLevel, "FILE", filefullName)
+					if utils.IsDir(assetRoot) {
+						fmt.Printf("[COPY] ")
+						fmt.Println(pathLevel, "DIR", assetRoot)
+					}
+				} else {
+					fmt.Printf("[PAGE] ")
+					fmt.Println(pathLevel, "FILE", filefullName)
+					if utils.IsDir(assetRoot) {
+						fmt.Printf("[COPY] ")
+						fmt.Println(pathLevel, "DIR", assetRoot)
+					}
+				}
+			}
 		} else {
-			fmt.Println(pathLevel, "DIR", filefullName)
-			err := prepare(filefullName)
+			if pathLevel == 2 {
+				continue
+			}
+			err := c.prepare(filefullName)
 			if err != nil {
 				return err
 			}
