@@ -10,6 +10,7 @@ timezone: Asia/Shanghai
 # Urls
 root: 
 permalink: /website/
+pageasset: asset
 
 # Directory
 post_dir: posts

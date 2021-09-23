@@ -59,20 +59,40 @@ func (c *CMD) render(startDIR string) error {
 			title := strings.TrimSuffix(f.Name(), suffix)
 
 			if pathLevel == 2 && suffix == ".md" {
-				assetRoot := path.Join(startDIR, title)
+
 				if pathLevelSlice[1] == c.Options.PostDir {
 					fmt.Printf("[POST] ")
 					fmt.Println(pathLevel, "FILE", title)
+
+					adst := path.Join(c.Options.PublicDir, c.Options.Permalink, title+".index")
+					c.processor(filefullName, adst)
+
+					assetRoot := path.Join(startDIR, title)
 					if utils.IsDir(assetRoot) {
 						fmt.Printf("[COPY] ")
 						fmt.Println(pathLevel, "DIR", assetRoot)
+						dst := path.Join(c.Options.PublicDir, c.Options.Permalink, title)
+						err = tools.FileCopy(assetRoot, dst)
+						if err != nil {
+							return err
+						}
 					}
 				} else {
 					fmt.Printf("[PAGE] ")
 					fmt.Println(pathLevel, "FILE", filefullName)
+
+					adst := path.Join(c.Options.PublicDir, pathLevelSlice[1], title+".html")
+					c.processor(filefullName, adst)
+
+					assetRoot := path.Join(startDIR, c.Options.PageAsset)
 					if utils.IsDir(assetRoot) {
 						fmt.Printf("[COPY] ")
 						fmt.Println(pathLevel, "DIR", assetRoot)
+						dst := path.Join(c.Options.PublicDir, pathLevelSlice[1], c.Options.PageAsset)
+						err = tools.FileCopy(assetRoot, dst)
+						if err != nil {
+							return err
+						}
 					}
 				}
 			}
@@ -91,4 +111,12 @@ func (c *CMD) render(startDIR string) error {
 
 func (c *CMD) detailsCheck() {
 
+}
+
+func (c *CMD) processor(src string, dst string) error {
+	err := tools.FileCopy(src, dst)
+	if err != nil {
+		return err
+	}
+	return nil
 }

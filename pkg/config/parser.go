@@ -31,6 +31,7 @@ type Site struct {
 type Urls struct {
 	Root      string `yaml:"root" default:"http://localhost:1080"`
 	Permalink string `yaml:"permalink" default:"/website/"`
+	PageAsset string `yaml:"pageasset" default:"asset"`
 }
 
 // Directory ...
