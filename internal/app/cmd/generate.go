@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -16,10 +17,10 @@ func (c *CMD) Generate() error {
 	var err error
 	loger.Task("generate").Infof("Location : %v", utils.GetWorkspace())
 
-	staticAssets := path.Join(utils.GetWorkspace(), c.ThemeStr, c.Options.Theme, "static")
+	staticAssets := path.Join(c.ThemeStr, c.Options.Theme, c.StaticStr)
 	if utils.IsExist(staticAssets) {
 		loger.Task("generate").Info("copy static assets")
-		err = tools.FileCopy(staticAssets, c.Options.PublicDir)
+		err = tools.DirCopy(staticAssets, c.Options.PublicDir)
 		if err != nil {
 			return err
 		}
@@ -64,15 +65,15 @@ func (c *CMD) render(startDIR string) error {
 					fmt.Printf("[POST] ")
 					fmt.Println(pathLevel, "FILE", title)
 
-					adst := path.Join(c.Options.PublicDir, c.Options.Permalink, title+".index")
-					c.processor(filefullName, adst)
+					adst := path.Join(c.Options.PublicDir, c.Options.Permalink, title+".html")
+					c.processor(filefullName, adst, c.Options.Permalink)
 
 					assetRoot := path.Join(startDIR, title)
 					if utils.IsDir(assetRoot) {
 						fmt.Printf("[COPY] ")
 						fmt.Println(pathLevel, "DIR", assetRoot)
 						dst := path.Join(c.Options.PublicDir, c.Options.Permalink, title)
-						err = tools.FileCopy(assetRoot, dst)
+						err = tools.DirCopy(assetRoot, dst)
 						if err != nil {
 							return err
 						}
@@ -82,14 +83,14 @@ func (c *CMD) render(startDIR string) error {
 					fmt.Println(pathLevel, "FILE", filefullName)
 
 					adst := path.Join(c.Options.PublicDir, pathLevelSlice[1], title+".html")
-					c.processor(filefullName, adst)
+					c.processor(filefullName, adst, pathLevelSlice[1])
 
 					assetRoot := path.Join(startDIR, c.Options.PageAsset)
 					if utils.IsDir(assetRoot) {
 						fmt.Printf("[COPY] ")
 						fmt.Println(pathLevel, "DIR", assetRoot)
 						dst := path.Join(c.Options.PublicDir, pathLevelSlice[1], c.Options.PageAsset)
-						err = tools.FileCopy(assetRoot, dst)
+						err = tools.DirCopy(assetRoot, dst)
 						if err != nil {
 							return err
 						}
@@ -113,8 +114,14 @@ func (c *CMD) detailsCheck() {
 
 }
 
-func (c *CMD) processor(src string, dst string) error {
-	err := tools.FileCopy(src, dst)
+func (c *CMD) processor(src string, dst string, dir string) error {
+	//fmt.Println("process")
+	dir = path.Join(c.Options.PublicDir, dir)
+	err := os.MkdirAll(dir, os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("fail to create floder %v ", dir)
+	}
+	err = tools.FileCopy(src, dst)
 	if err != nil {
 		return err
 	}

@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"path"
-	"path/filepath"
 	"time"
 
 	"github.com/ka1i/wispeeer/internal/pkg/tools"
@@ -16,12 +15,12 @@ func (c *CMD) NewPost(title string) error {
 	loger.Task("new").Infof("Location: %s", utils.GetWorkspace())
 
 	// 检查发布文件夹状态
-	utils.CheckDir(path.Join(utils.GetWorkspace(), c.Options.SourceDir))
-	utils.CheckDir(path.Join(utils.GetWorkspace(), c.Options.SourceDir, c.Options.PostDir))
+	utils.CheckDir(c.Options.SourceDir)
+	utils.CheckDir(path.Join(c.Options.SourceDir, c.Options.PostDir))
 
 	title = utils.SafeFormat(title, " ", "", "")
 	var safeName = utils.SafeFormat(title, "_", "md", ".")
-	var filePath = path.Join(utils.GetWorkspace(), c.Options.SourceDir, c.Options.PostDir, safeName)
+	var filePath = path.Join(c.Options.SourceDir, c.Options.PostDir, safeName)
 	if utils.IsExist(filePath) {
 		return fmt.Errorf("article %v is exist", safeName)
 	}
@@ -42,12 +41,12 @@ func (c *CMD) NewPage(title string) error {
 
 	// 检查发布文件夹状态
 	title = utils.SafeFormat(title, " ", "", "")
-	utils.CheckDir(path.Join(utils.GetWorkspace(), c.Options.SourceDir))
+	utils.CheckDir(c.Options.SourceDir)
 
-	utils.CheckDir(path.Join(utils.GetWorkspace(), c.Options.SourceDir, title))
+	utils.CheckDir(path.Join(c.Options.SourceDir, title))
 
 	var safeName = c.IndexStr
-	var filePath = path.Join(utils.GetWorkspace(), c.Options.SourceDir, title, safeName)
+	var filePath = path.Join(c.Options.SourceDir, title, safeName)
 	if utils.IsExist(filePath) {
 		return fmt.Errorf("page %v is exist", safeName)
 	}
@@ -66,10 +65,6 @@ func (c *CMD) NewPage(title string) error {
 func showInfo(filePath string, title string, safeName string) error {
 	fmt.Printf("title  : %s\n", title)
 	fmt.Printf("posted : %s\n", time.Now().Format("2006-01-02 15:04:05"))
-	filepath, err := filepath.Rel(utils.GetWorkspace(), filePath)
-	if err != nil {
-		return err
-	}
-	fmt.Printf("Created: %s\n", filepath)
+	fmt.Printf("Created: %s\n", filePath)
 	return nil
 }

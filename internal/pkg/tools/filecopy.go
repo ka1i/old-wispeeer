@@ -15,21 +15,54 @@ import (
 func FileCopy(src string, dst string) error {
 	srcStat, err := os.Stat(src)
 	if err != nil {
-		return fmt.Errorf("fail to read %v filestat", src)
+		return fmt.Errorf("fail to read %v stat", src)
+	}
+	if srcStat.IsDir() {
+		return fmt.Errorf("%v is dir", src)
+	}
+	if !utils.IsExist(filepath.Dir(dst)) {
+		return fmt.Errorf("dst dir does not exist %v ", filepath.Dir(dst))
+	}
+	srcfile, err := os.Open(src)
+	if err != nil {
+		return fmt.Errorf("fail to read %v", src)
+	}
+	defer srcfile.Close()
+
+	dstfile, err := os.Create(dst)
+	if err != nil {
+		return fmt.Errorf("fail to create file %v:%v", dst, err)
+	}
+	defer dstfile.Close()
+	_, err = io.Copy(dstfile, srcfile)
+	if err != nil {
+		return fmt.Errorf("fail copy %s -> %s", src, dst)
+	}
+	return nil
+}
+
+// DirCopy ...
+func DirCopy(src string, dst string) error {
+	srcStat, err := os.Stat(src)
+	if err != nil {
+		return fmt.Errorf("fail to read %v stat", src)
 	}
 
-	if !utils.IsExist(filepath.Dir(dst)) {
-		err := os.MkdirAll(filepath.Dir(dst), os.ModePerm)
-		if err != nil {
-			return fmt.Errorf("fail to create floder %v ", filepath.Dir(dst))
-		}
-	}
+	//fmt.Println(src, "--->", dst)
 
 	if srcStat.IsDir() {
+		if !utils.IsExist(dst) {
+			err := os.MkdirAll(dst, os.ModePerm)
+			if err != nil {
+				return fmt.Errorf("fail to create floder %v ", dst)
+			}
+		}
+		//fmt.Println(!utils.IsExist(filepath.Dir(dst)), filepath.Dir(dst))
 		files, err := ioutil.ReadDir(src)
 		if err != nil {
 			return fmt.Errorf("fail to read dir %v ", src)
 		}
+
 		for _, f := range files {
 			// ignore dotfile
 			if f.Name()[0] == 46 {
@@ -46,20 +79,9 @@ func FileCopy(src string, dst string) error {
 			return fmt.Errorf("%s is not regular file", src)
 		}
 
-		source, err := os.Open(src)
+		err := FileCopy(src, dst)
 		if err != nil {
-			return fmt.Errorf("fail to read %v file", src)
-		}
-		defer source.Close()
-
-		destination, err := os.Create(dst)
-		if err != nil {
-			return fmt.Errorf("fail to create file %v:%v", dst, err)
-		}
-		defer destination.Close()
-		_, err = io.Copy(destination, source)
-		if err != nil {
-			return fmt.Errorf("fail to copy file %v", dst)
+			return err
 		}
 	}
 	return nil

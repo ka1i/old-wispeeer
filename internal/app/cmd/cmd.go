@@ -5,15 +5,17 @@ import (
 )
 
 type CMD struct {
-	Options  config.Options
-	IndexStr string
-	ThemeStr string
+	Options   config.Options
+	IndexStr  string
+	ThemeStr  string
+	StaticStr string
 }
 
 func Run() *CMD {
 	return &CMD{
-		Options:  config.Configure.Options,
-		IndexStr: "index.md",
-		ThemeStr: "themes",
+		Options:   config.Configure.Options,
+		IndexStr:  "index.md",
+		ThemeStr:  "themes",
+		StaticStr: "static",
 	}
 }
