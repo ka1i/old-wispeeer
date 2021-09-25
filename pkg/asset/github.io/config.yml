@@ -9,7 +9,7 @@ timezone: Asia/Shanghai
 
 # Urls
 root: 
-permalink: /website/
+permalink: website
 pageasset: asset
 
 # Directory

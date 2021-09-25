@@ -20,8 +20,12 @@ func FileCopy(src string, dst string) error {
 	if srcStat.IsDir() {
 		return fmt.Errorf("%v is dir", src)
 	}
-	if !utils.IsExist(filepath.Dir(dst)) {
-		return fmt.Errorf("dst dir does not exist %v ", filepath.Dir(dst))
+	filePath := filepath.Dir(dst)
+	if !utils.IsExist(filePath) {
+		err := os.MkdirAll(filePath, os.ModePerm)
+		if err != nil {
+			return fmt.Errorf("fail to create floder %v ", filePath)
+		}
 	}
 	srcfile, err := os.Open(src)
 	if err != nil {

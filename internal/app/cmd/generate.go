@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
-	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -65,8 +64,8 @@ func (c *CMD) render(startDIR string) error {
 					fmt.Printf("[POST] ")
 					fmt.Println(pathLevel, "FILE", title)
 
-					adst := path.Join(c.Options.PublicDir, c.Options.Permalink, title+".html")
-					c.processor(filefullName, adst, c.Options.Permalink)
+					// process post
+					c.processor(filefullName, path.Join(c.Options.Permalink, title+".html"))
 
 					assetRoot := path.Join(startDIR, title)
 					if utils.IsDir(assetRoot) {
@@ -82,8 +81,8 @@ func (c *CMD) render(startDIR string) error {
 					fmt.Printf("[PAGE] ")
 					fmt.Println(pathLevel, "FILE", filefullName)
 
-					adst := path.Join(c.Options.PublicDir, pathLevelSlice[1], title+".html")
-					c.processor(filefullName, adst, pathLevelSlice[1])
+					// process page
+					c.processor(filefullName, path.Join(pathLevelSlice[1], title+".html"))
 
 					assetRoot := path.Join(startDIR, c.Options.PageAsset)
 					if utils.IsDir(assetRoot) {
@@ -114,14 +113,9 @@ func (c *CMD) detailsCheck() {
 
 }
 
-func (c *CMD) processor(src string, dst string, dir string) error {
-	//fmt.Println("process")
-	dir = path.Join(c.Options.PublicDir, dir)
-	err := os.MkdirAll(dir, os.ModePerm)
-	if err != nil {
-		return fmt.Errorf("fail to create floder %v ", dir)
-	}
-	err = tools.FileCopy(src, dst)
+func (c *CMD) processor(src string, dst string) error {
+	dstPath := path.Join(c.Options.PublicDir, dst)
+	err := tools.FileCopy(src, dstPath)
 	if err != nil {
 		return err
 	}
