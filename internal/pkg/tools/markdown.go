@@ -31,15 +31,14 @@ func CreateMarkdown(fileName string, title string, tags string) error {
 	//Flush buffer
 	fileWrite.Flush()
 
-	err = showInfo(fileName, title, articlePostedTime)
+	err = showInfo(fileName, articlePostedTime)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func showInfo(filePath string, title string, postTime string) error {
-	fmt.Printf("title  : %s\n", title)
+func showInfo(filePath string, postTime string) error {
 	fmt.Printf("posted : %s\n", postTime)
 	fmt.Printf("Created: %s\n", filePath)
 	return nil

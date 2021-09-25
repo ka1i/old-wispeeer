@@ -6,13 +6,10 @@ import (
 
 	"github.com/ka1i/wispeeer/internal/pkg/tools"
 	"github.com/ka1i/wispeeer/internal/pkg/utils"
-	loger "github.com/ka1i/wispeeer/pkg/log"
 )
 
 // NewPost ...
 func (c *CMD) NewPost(title string) error {
-	loger.Task("new").Infof("Location: %s", utils.GetWorkspace())
-
 	// 检查发布文件夹状态
 	utils.CheckDir(c.Options.SourceDir)
 	utils.CheckDir(path.Join(c.Options.SourceDir, c.Options.PostDir))
@@ -32,8 +29,6 @@ func (c *CMD) NewPost(title string) error {
 }
 
 func (c *CMD) NewPage(title string) error {
-	loger.Task("new").Infof("Location: %s", utils.GetWorkspace())
-
 	// 检查发布文件夹状态
 	title = utils.SafeFormat(title, " ", "", "")
 	utils.CheckDir(c.Options.SourceDir)

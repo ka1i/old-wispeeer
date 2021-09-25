@@ -14,7 +14,6 @@ import (
 
 func (c *CMD) Generate() error {
 	var err error
-	loger.Task("generate").Infof("Location : %v", utils.GetWorkspace())
 
 	// clear old public
 	tools.FileRemove(c.Options.PublicDir)

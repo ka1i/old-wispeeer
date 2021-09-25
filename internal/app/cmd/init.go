@@ -12,7 +12,6 @@ import (
 //Initialzation ...
 func (c *CMD) Initialzation(title string) error {
 	var err error
-	loger.Task("init").Infof("Location: %s", utils.GetWorkspace())
 
 	if utils.IsExist(title) {
 		return fmt.Errorf("%s: File exists", title)
