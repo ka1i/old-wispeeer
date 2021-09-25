@@ -108,16 +108,17 @@ func (c *CMD) render(startDIR string) error {
 }
 
 func (c *CMD) processor(src string, dst string) error {
-	dstPath := path.Join(c.Options.PublicDir, dst)
-	err := tools.FileCopy(src, dstPath)
-	if err != nil {
-		return err
-	}
 	article, err := tools.ArticleScanner(src)
 	if err != nil {
 		return err
 	}
 	c.detailsCheck(article)
+
+	tmpl := path.Join(c.ThemeStr, c.Options.Theme, "layout/post.html")
+	err = tools.PostRender(article, tmpl, path.Join(c.Options.PublicDir, dst))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

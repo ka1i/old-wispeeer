@@ -27,7 +27,7 @@ make
 ./bin/wispeeer -h
 ```
 
-![screenshot](screenshot.png)
+![screenshot](Wispeeer_User_Guide/screenshot.png)
 
 ## wispeeer init
 
