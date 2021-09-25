@@ -2,6 +2,7 @@ package tools
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"time"
 )
@@ -12,20 +13,34 @@ func CreateMarkdown(fileName string, title string, tags string) error {
 		return err
 	}
 	defer file.Close()
+
+	articlePostedTime := time.Now().UTC().Format("2006-01-02 15:04:05")
+
 	fileWrite := bufio.NewWriter(file)
 	//Markdown header
-	fileWrite.WriteString("------\n")
 	fileWrite.WriteString("title: " + title + "\n")
-	fileWrite.WriteString("posted: " + time.Now().Format("2006-01-02 15:04:05") + "\n")
+	fileWrite.WriteString("posted: " + articlePostedTime + "\n")
 	fileWrite.WriteString("tags: " + tags + "\n")
 	fileWrite.WriteString("categories: " + tags + "\n")
 	fileWrite.WriteString("------\n")
 	fileWrite.WriteString("\n\n")
 	fileWrite.WriteString("# Absract\n")
-	fileWrite.WriteString("<!-- more -->\n\n")
+	fileWrite.WriteString("<!--more-->\n\n")
 	fileWrite.WriteString("# Reference\n\n")
 
 	//Flush buffer
 	fileWrite.Flush()
+
+	err = showInfo(fileName, title, articlePostedTime)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func showInfo(filePath string, title string, postTime string) error {
+	fmt.Printf("title  : %s\n", title)
+	fmt.Printf("posted : %s\n", postTime)
+	fmt.Printf("Created: %s\n", filePath)
 	return nil
 }

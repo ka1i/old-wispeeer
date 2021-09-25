@@ -1,8 +1,7 @@
-------
 title: Wispeeer User Guide
 posted: 2021-03-29 3:20:37
-tags: Wispeeer
-categories: Wispeeer
+tags: [wispeeer]
+categories: [wispeeer]
 ------
 
 Usage: wispeeer [-i &lt;alias&gt;] [-n &lt;title&gt;] -[gsdhv]
@@ -10,7 +9,7 @@ Usage: wispeeer [-i &lt;alias&gt;] [-n &lt;title&gt;] -[gsdhv]
 If you are using it for the first time,
 first execute the command "wispeeer init &lt;Blog directory&gt;" to initialize the blog.
 
-<!-- more -->
+<!--more-->
 
 ## 依赖 (Require)
 ### 编译依赖 (Build Require)

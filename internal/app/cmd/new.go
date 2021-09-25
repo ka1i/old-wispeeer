@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"path"
-	"time"
 
 	"github.com/ka1i/wispeeer/internal/pkg/tools"
 	"github.com/ka1i/wispeeer/internal/pkg/utils"
@@ -25,13 +24,9 @@ func (c *CMD) NewPost(title string) error {
 		return fmt.Errorf("article %v is exist", safeName)
 	}
 	// 创建文章文件
-	err := tools.CreateMarkdown(filePath, title, "void")
+	err := tools.CreateMarkdown(filePath, title, "[void]")
 	if err != nil {
 		return fmt.Errorf("create article %s is failed", safeName)
-	}
-	err = showInfo(filePath, title, safeName)
-	if err != nil {
-		return err
 	}
 	return nil
 }
@@ -55,16 +50,5 @@ func (c *CMD) NewPage(title string) error {
 	if err != nil {
 		return fmt.Errorf("create page %s is failed", safeName)
 	}
-	err = showInfo(filePath, title, safeName)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func showInfo(filePath string, title string, safeName string) error {
-	fmt.Printf("title  : %s\n", title)
-	fmt.Printf("posted : %s\n", time.Now().Format("2006-01-02 15:04:05"))
-	fmt.Printf("Created: %s\n", filePath)
 	return nil
 }

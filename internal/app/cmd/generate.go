@@ -16,6 +16,9 @@ func (c *CMD) Generate() error {
 	var err error
 	loger.Task("generate").Infof("Location : %v", utils.GetWorkspace())
 
+	// clear old public
+	tools.FileRemove(c.Options.PublicDir)
+
 	staticAssets := path.Join(c.ThemeStr, c.Options.Theme, c.StaticStr)
 	if utils.IsExist(staticAssets) {
 		loger.Task("generate").Info("copy static assets")
@@ -34,8 +37,6 @@ func (c *CMD) Generate() error {
 	}
 	//loger.Task("generate").Infof("Article  : %d (Total)\n", Total)
 
-	c.detailsCheck()
-
 	return nil
 }
 
@@ -53,7 +54,11 @@ func (c *CMD) render(startDIR string) error {
 		pathLevel := len(pathLevelSlice)
 		if utils.IsFile(filefullName) {
 			if pathLevel == 1 {
-				fmt.Printf("[COPY] ")
+				oneLevelAsset := path.Join(c.Options.PublicDir, f.Name())
+				err = tools.FileCopy(filefullName, oneLevelAsset)
+				if err != nil {
+					return err
+				}
 			}
 			suffix := path.Ext(f.Name())
 			title := strings.TrimSuffix(f.Name(), suffix)
@@ -61,16 +66,13 @@ func (c *CMD) render(startDIR string) error {
 			if pathLevel == 2 && suffix == ".md" {
 
 				if pathLevelSlice[1] == c.Options.PostDir {
-					fmt.Printf("[POST] ")
-					fmt.Println(pathLevel, "FILE", title)
-
 					// process post
-					c.processor(filefullName, path.Join(c.Options.Permalink, title+".html"))
-
+					err = c.processor(filefullName, path.Join(c.Options.Permalink, title+".html"))
+					if err != nil {
+						return err
+					}
 					assetRoot := path.Join(startDIR, title)
 					if utils.IsDir(assetRoot) {
-						fmt.Printf("[COPY] ")
-						fmt.Println(pathLevel, "DIR", assetRoot)
 						dst := path.Join(c.Options.PublicDir, c.Options.Permalink, title)
 						err = tools.DirCopy(assetRoot, dst)
 						if err != nil {
@@ -82,12 +84,12 @@ func (c *CMD) render(startDIR string) error {
 					fmt.Println(pathLevel, "FILE", filefullName)
 
 					// process page
-					c.processor(filefullName, path.Join(pathLevelSlice[1], title+".html"))
-
+					err := c.processor(filefullName, path.Join(pathLevelSlice[1], title+".html"))
+					if err != nil {
+						return err
+					}
 					assetRoot := path.Join(startDIR, c.Options.PageAsset)
 					if utils.IsDir(assetRoot) {
-						fmt.Printf("[COPY] ")
-						fmt.Println(pathLevel, "DIR", assetRoot)
 						dst := path.Join(c.Options.PublicDir, pathLevelSlice[1], c.Options.PageAsset)
 						err = tools.DirCopy(assetRoot, dst)
 						if err != nil {
@@ -109,15 +111,22 @@ func (c *CMD) render(startDIR string) error {
 	return nil
 }
 
-func (c *CMD) detailsCheck() {
-
-}
-
 func (c *CMD) processor(src string, dst string) error {
 	dstPath := path.Join(c.Options.PublicDir, dst)
 	err := tools.FileCopy(src, dstPath)
 	if err != nil {
 		return err
 	}
+	article, err := tools.ArticleScanner(src)
+	if err != nil {
+		return err
+	}
+	c.detailsCheck(article)
 	return nil
+}
+
+func (c *CMD) detailsCheck(article tools.Article) {
+	fmt.Println("*************************************")
+	fmt.Printf("Title: %s\nData: %v\nCategories: %s\nTags: %s\n", article.Metadata.Title,
+		article.Metadata.Posted, article.Metadata.Categories, article.Metadata.Tags)
 }

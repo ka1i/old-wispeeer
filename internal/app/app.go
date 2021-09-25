@@ -32,7 +32,7 @@ func (a *app) Wispeeer() int {
 
 func barry(argc int, argv []string) {
 	var err error
-	defer utils.Timer("wispeeer ", time.Now())
+	defer utils.Timer("wispeeer", time.Now())
 
 	config.Configure.Init()
 	run := cmd.Run()
