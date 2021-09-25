@@ -79,9 +79,6 @@ func (c *CMD) render(startDIR string) error {
 						}
 					}
 				} else {
-					fmt.Printf("[PAGE] ")
-					fmt.Println(pathLevel, "FILE", filefullName)
-
 					// process page
 					err := c.processor(filefullName, path.Join(pathLevelSlice[1], title+".html"))
 					if err != nil {

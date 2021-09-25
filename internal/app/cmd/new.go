@@ -41,7 +41,7 @@ func (c *CMD) NewPage(title string) error {
 		return fmt.Errorf("page %v is exist", safeName)
 	}
 	// 创建文件
-	err := tools.CreateMarkdown(filePath, title, title)
+	err := tools.CreateMarkdown(filePath, title, "["+title+"]")
 	if err != nil {
 		return fmt.Errorf("create page %s is failed", safeName)
 	}
