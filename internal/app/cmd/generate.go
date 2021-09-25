@@ -11,8 +11,16 @@ import (
 	loger "github.com/ka1i/wispeeer/pkg/log"
 )
 
+var (
+	total     uint64
+	wispeeers tools.Wispeeers
+)
+
 func (c *CMD) Generate() error {
 	var err error
+
+	wispeeers.Options = c.Options
+	wispeeers.Pages = append(wispeeers.Pages, "home")
 
 	// clear old public
 	tools.FileRemove(c.Options.PublicDir)
@@ -33,7 +41,11 @@ func (c *CMD) Generate() error {
 	if err != nil {
 		return err
 	}
-	//loger.Task("generate").Infof("Article  : %d (Total)\n", Total)
+	loger.Task("generate").Infof("Article  : %d (Total)\n", total)
+
+	dst := path.Join(c.Options.PublicDir, "index.html")
+	tmpl := path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, "index.html")
+	tools.ListRender(wispeeers, tmpl, dst)
 
 	return nil
 }
@@ -114,22 +126,32 @@ func (c *CMD) processor(src string, dst string, mode string) error {
 		return err
 	}
 	c.detailsCheck(article)
+
+	wispeeer := tools.Wispeeer{
+		Article: article,
+		Options: c.Options,
+	}
+
 	if mode == "post" {
-		tmpl := path.Join(c.ThemeStr, c.Options.Theme, "layout/post.html")
-		err = tools.PostRender(article, tmpl, dst)
+		total++
+		tmpl := path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, "post.html")
+		err = tools.PostRender(wispeeer, tmpl, dst)
 		if err != nil {
 			return err
 		}
+		// save article info to mem
+		wispeeers.Article = append(wispeeers.Article, article)
 	} else if mode == "page" {
 		pathSlice := strings.Split(filepath.ToSlash((src)), "/")
 		tmpl := path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, pathSlice[1]+".html")
 		if !utils.IsExist(tmpl) {
 			tmpl = path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, "page.html")
 		}
-		err = tools.PageRender(article, tmpl, dst)
+		err = tools.PageRender(wispeeer, tmpl, dst)
 		if err != nil {
 			return err
 		}
+		wispeeers.Pages = append(wispeeers.Pages, pathSlice[1])
 	}
 
 	return nil

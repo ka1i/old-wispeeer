@@ -5,20 +5,33 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+	"sort"
 
 	"github.com/ka1i/wispeeer/internal/pkg/utils"
+	"github.com/ka1i/wispeeer/pkg/config"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday/v2"
 )
 
-func PostRender(article Article, tmpl string, dst string) error {
-	unsafeOverview := blackfriday.Run([]byte(article.Overview))
-	htmlSourceOverview := bluemonday.UGCPolicy().SanitizeBytes(unsafeOverview)
-	article.Overview = template.HTML(htmlSourceOverview)
+type Wispeeer struct {
+	Article        `yaml:",inline"`
+	config.Options `yaml:",inline"`
+}
 
-	unsafeContent := blackfriday.Run([]byte(article.Content))
+type Wispeeers struct {
+	Article []Article
+	Pages   []string
+	Options config.Options
+}
+
+func PostRender(wispeeer Wispeeer, tmpl string, dst string) error {
+	unsafeOverview := blackfriday.Run([]byte(wispeeer.Overview))
+	htmlSourceOverview := bluemonday.UGCPolicy().SanitizeBytes(unsafeOverview)
+	wispeeer.Overview = template.HTML(htmlSourceOverview)
+
+	unsafeContent := blackfriday.Run([]byte(wispeeer.Content))
 	htmlSourceContent := bluemonday.UGCPolicy().SanitizeBytes(unsafeContent)
-	article.Content = template.HTML(htmlSourceContent)
+	wispeeer.Content = template.HTML(htmlSourceContent)
 
 	filePath := filepath.Dir(dst)
 	if !utils.IsExist(filePath) {
@@ -39,17 +52,17 @@ func PostRender(article Article, tmpl string, dst string) error {
 		return err
 	}
 
-	err = t.Execute(f, article)
+	err = t.Execute(f, wispeeer)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func PageRender(article Article, tmpl string, dst string) error {
-	unsafeContent := blackfriday.Run([]byte(article.Content))
+func PageRender(wispeeer Wispeeer, tmpl string, dst string) error {
+	unsafeContent := blackfriday.Run([]byte(wispeeer.Content))
 	htmlSourceContent := bluemonday.UGCPolicy().SanitizeBytes(unsafeContent)
-	article.Content = template.HTML(htmlSourceContent)
+	wispeeer.Content = template.HTML(htmlSourceContent)
 
 	filePath := filepath.Dir(dst)
 	if !utils.IsExist(filePath) {
@@ -70,7 +83,29 @@ func PageRender(article Article, tmpl string, dst string) error {
 		return err
 	}
 
-	err = t.Execute(f, article)
+	err = t.Execute(f, wispeeer)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func ListRender(wispeeers Wispeeers, tmpl string, dst string) error {
+	sort.Slice(wispeeers.Article, func(i, j int) bool {
+		return wispeeers.Article[i].Metadata.Posted.Before(wispeeers.Article[j].Metadata.Posted)
+	})
+	f, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	t, err := template.ParseFiles(tmpl)
+	if err != nil {
+		return err
+	}
+
+	err = t.Execute(f, wispeeers)
 	if err != nil {
 		return err
 	}
