@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"strings"
@@ -49,7 +50,6 @@ func ArticleScanner(fullName string) (Article, error) {
 
 	markdownStr := strings.SplitN(string(content), CONFIG_SPLIT, 2)
 	contentLen := len(markdownStr)
-
 	if contentLen > 0 {
 		metadataStr = markdownStr[0]
 	}
@@ -58,7 +58,7 @@ func ArticleScanner(fullName string) (Article, error) {
 	}
 	// Parse article markdown content
 	if err := yaml.Unmarshal([]byte(metadataStr), &article.Metadata); err != nil {
-		return article, err
+		return article, fmt.Errorf("%s:%v", fullName, err)
 	}
 
 	overviewStr := strings.SplitN(ContentStr, MORE_SPLIT, 2)

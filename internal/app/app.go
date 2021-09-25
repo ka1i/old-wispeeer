@@ -67,7 +67,11 @@ func barry(argc int, argv []string) {
 			err = fmt.Errorf("wispeeer new [post] <title>")
 		}
 	case "-g", "generate":
-		err = run.Generate()
+		if config.Configure.Error == nil {
+			err = run.Generate()
+		} else {
+			err = config.Configure.Error
+		}
 	case "-s", "server":
 		fmt.Println("server")
 	case "-d", "deploy":

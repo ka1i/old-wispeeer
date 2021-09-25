@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"io/ioutil"
 	"path"
 	"path/filepath"
@@ -66,13 +65,14 @@ func (c *CMD) render(startDIR string) error {
 
 				if pathLevelSlice[1] == c.Options.PostDir {
 					// process post
-					err = c.processor(filefullName, path.Join(c.Options.Permalink, title+".html"))
+					dstPath := path.Join(c.Options.PublicDir, c.Options.Permalink)
+					err = c.processor(filefullName, path.Join(dstPath, title+".html"), "post")
 					if err != nil {
 						return err
 					}
 					assetRoot := path.Join(startDIR, title)
 					if utils.IsDir(assetRoot) {
-						dst := path.Join(c.Options.PublicDir, c.Options.Permalink, title)
+						dst := path.Join(dstPath, title)
 						err = tools.DirCopy(assetRoot, dst)
 						if err != nil {
 							return err
@@ -80,13 +80,14 @@ func (c *CMD) render(startDIR string) error {
 					}
 				} else {
 					// process page
-					err := c.processor(filefullName, path.Join(pathLevelSlice[1], title+".html"))
+					dstPath := path.Join(c.Options.PublicDir, pathLevelSlice[1])
+					err := c.processor(filefullName, path.Join(dstPath, title+".html"), "page")
 					if err != nil {
 						return err
 					}
 					assetRoot := path.Join(startDIR, c.Options.PageAsset)
 					if utils.IsDir(assetRoot) {
-						dst := path.Join(c.Options.PublicDir, pathLevelSlice[1], c.Options.PageAsset)
+						dst := path.Join(dstPath, c.Options.PageAsset)
 						err = tools.DirCopy(assetRoot, dst)
 						if err != nil {
 							return err
@@ -107,23 +108,36 @@ func (c *CMD) render(startDIR string) error {
 	return nil
 }
 
-func (c *CMD) processor(src string, dst string) error {
+func (c *CMD) processor(src string, dst string, mode string) error {
 	article, err := tools.ArticleScanner(src)
 	if err != nil {
 		return err
 	}
 	c.detailsCheck(article)
-
-	tmpl := path.Join(c.ThemeStr, c.Options.Theme, "layout/post.html")
-	err = tools.PostRender(article, tmpl, path.Join(c.Options.PublicDir, dst))
-	if err != nil {
-		return err
+	if mode == "post" {
+		tmpl := path.Join(c.ThemeStr, c.Options.Theme, "layout/post.html")
+		err = tools.PostRender(article, tmpl, dst)
+		if err != nil {
+			return err
+		}
+	} else if mode == "page" {
+		pathSlice := strings.Split(filepath.ToSlash((src)), "/")
+		tmpl := path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, pathSlice[1]+".html")
+		if !utils.IsExist(tmpl) {
+			tmpl = path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, "page.html")
+		}
+		err = tools.PageRender(article, tmpl, dst)
+		if err != nil {
+			return err
+		}
 	}
+
 	return nil
 }
 
 func (c *CMD) detailsCheck(article tools.Article) {
-	fmt.Println("*************************************")
-	fmt.Printf("Title: %s\nData: %v\nCategories: %s\nTags: %s\n", article.Metadata.Title,
-		article.Metadata.Posted, article.Metadata.Categories, article.Metadata.Tags)
+	loger.Task("render").Infof("process %s\n", article.Metadata.Title)
+	// fmt.Println("*************************************")
+	// fmt.Printf("Title: %s\nPosted: %s\nCategories: %s\nTags: %s\n", article.Metadata.Title,
+	// 	article.Metadata.Posted, article.Metadata.Categories, article.Metadata.Tags)
 }

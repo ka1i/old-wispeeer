@@ -11,6 +11,7 @@ type CMD struct {
 	IndexStr  string
 	ThemeStr  string
 	StaticStr string
+	LayoutStr string
 }
 
 func Run() *CMD {
@@ -20,5 +21,6 @@ func Run() *CMD {
 		IndexStr:  "index.md",
 		ThemeStr:  "themes",
 		StaticStr: "static",
+		LayoutStr: "layout",
 	}
 }

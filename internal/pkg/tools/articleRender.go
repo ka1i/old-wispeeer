@@ -22,7 +22,37 @@ func PostRender(article Article, tmpl string, dst string) error {
 
 	filePath := filepath.Dir(dst)
 	if !utils.IsExist(filePath) {
-		fmt.Println(filePath)
+		err := os.MkdirAll(filePath, os.ModePerm)
+		if err != nil {
+			return fmt.Errorf("fail to create floder %v ", filePath)
+		}
+	}
+
+	f, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	t, err := template.ParseFiles(tmpl)
+	if err != nil {
+		return err
+	}
+
+	err = t.Execute(f, article)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func PageRender(article Article, tmpl string, dst string) error {
+	unsafeContent := blackfriday.Run([]byte(article.Content))
+	htmlSourceContent := bluemonday.UGCPolicy().SanitizeBytes(unsafeContent)
+	article.Content = template.HTML(htmlSourceContent)
+
+	filePath := filepath.Dir(dst)
+	if !utils.IsExist(filePath) {
 		err := os.MkdirAll(filePath, os.ModePerm)
 		if err != nil {
 			return fmt.Errorf("fail to create floder %v ", filePath)
