@@ -21,6 +21,6 @@ func Run() *CMD {
 		IndexStr:  "index.md",
 		ThemeStr:  "themes",
 		StaticStr: "static",
-		LayoutStr: "layout",
+		LayoutStr: "layouts",
 	}
 }
