@@ -24,6 +24,7 @@ type Site struct {
 	Keywords    string `yaml:"keywords" default:"blog"`
 	Author      string `yaml:"author" default:"void"`
 	Theme       string `yaml:"theme" default:"wisper"`
+	Language    string `yaml:"language" default:"en"`
 	Timezone    string `yaml:"timezone" default:"Local"`
 }
 

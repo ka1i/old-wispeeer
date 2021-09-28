@@ -73,7 +73,7 @@ func DirCopy(src string, dst string) error {
 				continue
 			}
 			filenameWithSuffix := path.Base(f.Name())
-			err = FileCopy(path.Join(src, filenameWithSuffix), path.Join(dst, filenameWithSuffix))
+			err = DirCopy(path.Join(src, filenameWithSuffix), path.Join(dst, filenameWithSuffix))
 			if err != nil {
 				return err
 			}

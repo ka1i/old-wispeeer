@@ -1,23 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ .Options.Site.Title }}</title>
-</head>
-<body>
-    <header>
-        {{ range .Pages }}
-        <span>{{ . }}</span>
-        {{ end }}
-    </header>
-   <div>
-    {{ range .Article }}
-    <h1>{{ .Metadata }}</h1>
-    <div>{{ .Overview }}</div>
-    <hr/>
-    {{ end }}
-   </div>
-</body>
+<html lang="{{ .Options.Site.Language }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to PBS</title>
+    <meta name="description" content="this is personal blog." />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/images/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/images/favicon-16x16.png"
+    />
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/special.css" />
+    <!--特效JavaScript-->
+    <script type="text/javascript" src="/js/clicklove.js"></script>
+    <!--website fonts-->
+    <link rel="preconnect" , href="https://fonts.gstatic.com" />
+    <link
+      rel="stylesheet"
+      ,
+      href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      ,
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&display=swap"
+    />
+  </head>
+
+  <body>
+    <p class="update">Last Update 2020/4/11 1:44 PM</p>
+    <div class="container">
+      <main>
+        <header>
+          <img
+            class="portrait"
+            draggable="false"
+            src="/images/avatar.jpg"
+            alt="Portrait"
+          />
+          <p class="title"><a href="#">Hi! Welcome to PBS.</a></p>
+          <nav>
+            <a href="/index.html">Home</a>
+            <span>|</span>
+            <a href="/archives">Articles</a>
+            <span>|</span>
+            <a href="/about">About</a>
+          </nav>
+        </header>
+        <div class="content">
+          <p>{{ .Options.Site.Author }}</p>
+          <p>Software Engineer</p>
+          <p>Sichuan, China</p>
+        </div>
+      </main>
+      <hr />
+      <footer>
+        <div class="footer-inner">
+          <a
+            href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
+            target="_blank"
+            rel="noopener"
+            ><i class="fa fa-fw fa-creative-commons"></i>CC BY-NC-SA 4.0</a
+          >
+          <div class="copyright">
+            © 2017 – <span itemprop="copyrightYear">2021</span>
+            <span class="with-love" id="animate">
+              <i class="fa fa-heart"></i>
+            </span>
+            <span class="author" itemprop="copyrightHolder">Mardan · M</span>
+          </div>
+          <div class="footer-custom">
+            Copyright © 2017 - 2021 Mardan. All Rights Reserved.
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
 </html>
