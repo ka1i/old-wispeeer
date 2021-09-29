@@ -32,14 +32,13 @@ type Site struct {
 type Urls struct {
 	Root      string `yaml:"root" default:"http://localhost:1080"`
 	Permalink string `yaml:"permalink" default:"website"`
-	PageAsset string `yaml:"pageasset" default:"asset"`
 }
 
 // Directory ...
 type Directory struct {
-	PostDir   string `yaml:"post_dir" default:"posts"`
-	SourceDir string `yaml:"source_dir" default:"source"`
-	PublicDir string `yaml:"public_dir" default:"public"`
+	ArticleDir string `yaml:"article_dir" default:"article"`
+	SourceDir  string `yaml:"source_dir" default:"source"`
+	PublicDir  string `yaml:"public_dir" default:"public"`
 }
 
 // Pagination ...

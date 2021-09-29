@@ -12,15 +12,12 @@ import (
 )
 
 var (
-	total     uint64
-	wispeeers tools.Wispeeers
+	articles, pages uint64
+	wispeeer        tools.Wispeeer
 )
 
 func (c *CMD) Generate() error {
 	var err error
-
-	wispeeers.Options = c.Options
-	wispeeers.Pages = append(wispeeers.Pages, "home")
 
 	// clear old public
 	tools.FileRemove(c.Options.PublicDir)
@@ -41,11 +38,8 @@ func (c *CMD) Generate() error {
 	if err != nil {
 		return err
 	}
-	loger.Task("generate").Infof("Article  : %d (Total)\n", total)
-
-	dst := path.Join(c.Options.PublicDir, "index.html")
-	tmpl := path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, "index.html")
-	tools.ListRender(wispeeers, tmpl, dst)
+	loger.Task("page").Infof("Pages  : %d (Total)\n", pages)
+	loger.Task("article").Infof("Articles  : %d (Total)\n", articles)
 
 	return nil
 }
@@ -74,37 +68,10 @@ func (c *CMD) render(startDIR string) error {
 			title := strings.TrimSuffix(f.Name(), suffix)
 
 			if pathLevel == 2 && suffix == ".md" {
-
-				if pathLevelSlice[1] == c.Options.PostDir {
-					// process post
-					dstPath := path.Join(c.Options.PublicDir, c.Options.Permalink)
-					err = c.processor(filefullName, path.Join(dstPath, title+".html"), "post")
-					if err != nil {
-						return err
-					}
-					assetRoot := path.Join(startDIR, title)
-					if utils.IsDir(assetRoot) {
-						dst := path.Join(dstPath, title)
-						err = tools.DirCopy(assetRoot, dst)
-						if err != nil {
-							return err
-						}
-					}
-				} else {
-					// process page
-					dstPath := path.Join(c.Options.PublicDir, pathLevelSlice[1])
-					err := c.processor(filefullName, path.Join(dstPath, title+".html"), "page")
-					if err != nil {
-						return err
-					}
-					assetRoot := path.Join(startDIR, c.Options.PageAsset)
-					if utils.IsDir(assetRoot) {
-						dst := path.Join(dstPath, c.Options.PageAsset)
-						err = tools.DirCopy(assetRoot, dst)
-						if err != nil {
-							return err
-						}
-					}
+				// process markdown
+				err = c.processor(filefullName, title)
+				if err != nil {
+					return err
 				}
 			}
 		} else {
@@ -120,46 +87,46 @@ func (c *CMD) render(startDIR string) error {
 	return nil
 }
 
-func (c *CMD) processor(src string, dst string, mode string) error {
+func (c *CMD) processor(src string, title string) error {
 	article, err := tools.ArticleScanner(src)
 	if err != nil {
 		return err
 	}
-	c.detailsCheck(article)
+	assetsPath := path.Join(strings.TrimRight(src, ".md"))
+	layoutPath := path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr)
+	tmpl := path.Join(layoutPath, c.Options.ArticleDir+".html")
 
-	wispeeer := tools.Wispeeer{
-		Article: article,
-		Options: c.Options,
-	}
-
-	if mode == "post" {
-		total++
-		tmpl := path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, "post.html")
-		err = tools.PostRender(wispeeer, tmpl, dst)
+	wispeeer.Article = article
+	wispeeer.Options = c.Options
+	if title != c.IndexStr {
+		// process articles
+		articles++
+		dst := path.Join(c.Options.PublicDir, c.Options.Permalink)
+		err = tools.ArticleRender(wispeeer, tmpl, path.Join(dst, title+".html"))
 		if err != nil {
 			return err
 		}
-		// save article info to mem
-		wispeeers.Article = append(wispeeers.Article, article)
-	} else if mode == "page" {
-		pathSlice := strings.Split(filepath.ToSlash((src)), "/")
-		tmpl := path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, pathSlice[1]+".html")
-		if !utils.IsExist(tmpl) {
-			tmpl = path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, "page.html")
+		if utils.IsDir(assetsPath) {
+			err = tools.DirCopy(assetsPath, path.Join(dst, title))
+			if err != nil {
+				return err
+			}
 		}
-		err = tools.PageRender(wispeeer, tmpl, dst)
+	} else {
+		// process other page
+		pages++
+		dst := path.Join(c.Options.PublicDir, article.Metadata.Title)
+		err = tools.PageRender(wispeeer, tmpl, path.Join(dst, "index.html"))
 		if err != nil {
 			return err
 		}
-		wispeeers.Pages = append(wispeeers.Pages, pathSlice[1])
+		if utils.IsDir(assetsPath) {
+			err = tools.DirCopy(assetsPath, path.Join(dst, article.Metadata.Title))
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
-}
-
-func (c *CMD) detailsCheck(article tools.Article) {
-	loger.Task("render").Infof("process %s\n", article.Metadata.Title)
-	// fmt.Println("*************************************")
-	// fmt.Printf("Title: %s\nPosted: %s\nCategories: %s\nTags: %s\n", article.Metadata.Title,
-	// 	article.Metadata.Posted, article.Metadata.Categories, article.Metadata.Tags)
 }

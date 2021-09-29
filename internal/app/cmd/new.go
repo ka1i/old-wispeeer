@@ -10,13 +10,9 @@ import (
 
 // NewPost ...
 func (c *CMD) NewPost(title string) error {
-	// 检查发布文件夹状态
-	utils.CheckDir(c.Options.SourceDir)
-	utils.CheckDir(path.Join(c.Options.SourceDir, c.Options.PostDir))
-
 	title = utils.SafeFormat(title, " ", "", "")
 	var safeName = utils.SafeFormat(title, "_", "md", ".")
-	var filePath = path.Join(c.Options.SourceDir, c.Options.PostDir, safeName)
+	var filePath = path.Join(c.Options.SourceDir, c.Options.ArticleDir, safeName)
 	if utils.IsExist(filePath) {
 		return fmt.Errorf("article %v is exist", safeName)
 	}
@@ -35,7 +31,7 @@ func (c *CMD) NewPage(title string) error {
 
 	utils.CheckDir(path.Join(c.Options.SourceDir, title))
 
-	var safeName = c.IndexStr
+	var safeName = c.IndexMarkdownTitleStr
 	var filePath = path.Join(c.Options.SourceDir, title, safeName)
 	if utils.IsExist(filePath) {
 		return fmt.Errorf("page %v is exist", safeName)

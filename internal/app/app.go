@@ -73,7 +73,11 @@ func barry(argc int, argv []string) {
 			err = config.Configure.Error
 		}
 	case "-s", "server":
-		fmt.Println("server")
+		if config.Configure.Error == nil {
+			err = run.Server()
+		} else {
+			err = config.Configure.Error
+		}
 	case "-d", "deploy":
 		fmt.Println("deploy")
 	case "-h", "--help", "help":

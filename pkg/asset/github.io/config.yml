@@ -10,12 +10,11 @@ timezone: Asia/Shanghai
 # Urls
 root: 
 permalink: website
-pageasset: asset
 
 # Directory
-post_dir: posts
 source_dir: source
 public_dir: public
+article_dir: article
 
 # Pagination
 per_page: 9
