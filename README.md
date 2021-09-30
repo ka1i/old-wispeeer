@@ -21,3 +21,22 @@ index.html # 文章列
 post.html # 文章渲染模板
 page.html # 页面：比如about，渲染模板
 ```
+
+## tree public
+public
+├── index.html
+├── about
+│   └── index.html
+├── articles
+│   ├── index.html
+│   ├── 2.html
+│   └── 3.html
+├── links
+│   └── index.html
+└── website
+    ├── Markdown_1.0.1.html
+    ├── Wispeeer_User_Guide
+    │   └── screenshot.png
+    └── Wispeeer_User_Guide.html
+
+5 directories, 9 files
