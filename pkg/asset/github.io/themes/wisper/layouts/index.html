@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ .Options.Site.Language }}">
+<html lang="{{ .Site.Language }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -52,7 +52,7 @@
           <nav>
             <a href="/#">Home</a>
             <span>|</span>
-            <a href="/articles">Articles</a>
+            <a href="/page">Articles</a>
             <span>|</span>
             <a href="/links">Links</a>
             <span>|</span>
@@ -60,7 +60,7 @@
           </nav>
         </header>
         <div class="content">
-          <p>{{ .Options.Site.Author }}</p>
+          <p>{{ .Site.Author }}</p>
           <p>Software Engineer</p>
           <p>Sichuan, China</p>
         </div>

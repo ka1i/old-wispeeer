@@ -14,6 +14,7 @@ import (
 var (
 	articles, pages uint64
 	wispeeer        tools.Wispeeer
+	articleList     []tools.Article
 )
 
 func (c *CMD) Generate() error {
@@ -41,6 +42,19 @@ func (c *CMD) Generate() error {
 	loger.Task("page").Infof("Pages  : %d (Total)\n", pages)
 	loger.Task("article").Infof("Articles  : %d (Total)\n", articles)
 
+	dst := path.Join(c.Options.PublicDir, c.Options.PaginationDir)
+	tmpl := path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, "post.html")
+	err = tools.ArticleListRender(articleList, &c.Options, tmpl, dst)
+	if err != nil {
+		return err
+	}
+
+	tmpl = path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, "index.html")
+	dst = path.Join(c.Options.PublicDir, "index.html")
+	err = tools.IndexRender(tmpl, dst, &c.Options)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -98,6 +112,7 @@ func (c *CMD) processor(src string, title string) error {
 
 	wispeeer.Article = article
 	wispeeer.Options = c.Options
+
 	if title != c.IndexStr {
 		// process articles
 		articles++
@@ -112,9 +127,15 @@ func (c *CMD) processor(src string, title string) error {
 				return err
 			}
 		}
+		articleList = append(articleList, article)
 	} else {
 		// process other page
 		pages++
+		recomandTmpl := path.Join(layoutPath, article.Metadata.Title+".html")
+		if utils.IsExist(recomandTmpl) {
+			tmpl = recomandTmpl
+		}
+
 		dst := path.Join(c.Options.PublicDir, article.Metadata.Title)
 		err = tools.PageRender(wispeeer, tmpl, path.Join(dst, "index.html"))
 		if err != nil {
