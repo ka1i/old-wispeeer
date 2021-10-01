@@ -16,6 +16,7 @@ func (c *CMD) Server() error {
 		Handler: mux,
 	}
 	loger.Task("server").Printf("Running at %v\n", server.Addr)
+	loger.Task("server").Println("Press Ctrl+c to quit")
 	server.ListenAndServe()
 
 	return nil
