@@ -20,6 +20,7 @@ make
 + 文章列表  []Article   index.html ---> /index.html, [2,3].html ---> /articles/*
 
 ## tree public
+```
 public
 ├── index.html
 ├── about
@@ -36,3 +37,4 @@ public
     └── Wispeeer_User_Guide.html
 
 5 directories, 9 files
+```
