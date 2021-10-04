@@ -11,7 +11,7 @@ import (
 // NewPost ...
 func (c *CMD) NewPost(title string) error {
 	title = utils.SafeFormat(title, " ", "", "")
-	var safeName = utils.SafeFormat(title, "_", "md", ".")
+	var safeName = utils.SafeFormat(title, "-", "md", ".")
 	var filePath = path.Join(c.Options.SourceDir, c.Options.ArticleDir, safeName)
 	if utils.IsExist(filePath) {
 		return fmt.Errorf("article %v is exist", safeName)

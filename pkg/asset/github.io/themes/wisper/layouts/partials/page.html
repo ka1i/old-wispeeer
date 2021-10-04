@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ .Options.Title }}</title>
+    <meta name="description" content="this is personal blog." />
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/github-markdown.css" />
+
+    <link rel=preconnect href=https://fonts.gstatic.com crossorigin>
+    <style>
+        .markdown-body {
+            font-family: "Comic Neue";
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 1.2rem;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body class="site">
+    <div class="site-wrap">
+        <header class="site-header">
+            <div class="measure">
+                <a href="/" class="site-title">{{ .Options.Subtitle }}</a>
+                <nav class="site-nav">
+                    <a href="/Archives">Archives</a>
+                    <span>/</span>
+                    <a href="/Categories">Categories</a>
+                    <span>/</span>
+                    <a href="/About">About</a>
+                </nav>
+                <div class="clearfix"></div>
+            </div>
+            <div class="site-context">
+                <a href="/website/index.html">{{ .Options.Description }}</a>
+            </div>
+        </header>
+        <div id="main" class="markdown-body">
+            <div class="measure">
+              <div class="posts">
+                {{ range .Article }}
+                <div class="post">
+                  <div class="post-title">
+                    <a
+                      href="/website/Markdown-1.0.1.html"
+                      class="post-title-link"
+                      itemprop="url"
+                    >
+                      <span>{{ .Metadata.Title }}</span>
+                    </a>
+                  </div>
+                  <article class="post-summary">
+                    <div class="post-body">{{ .Overview }}</div>
+                  </article>
+                </div>
+                {{ end }}
+              </div>
+              {{template "blocks/post_nav.html"}}
+            </div>
+          </div>
+    </div>
+    {{template "blocks/footer.html" .}}
+</body>
+
+</html>

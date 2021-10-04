@@ -4,9 +4,13 @@ import (
 	"fmt"
 	"html/template"
 	"io/ioutil"
+	"path"
 	"strings"
 	"time"
 
+	"github.com/ka1i/wispeeer/pkg/config"
+	"github.com/microcosm-cc/bluemonday"
+	"github.com/russross/blackfriday/v2"
 	"gopkg.in/yaml.v3"
 )
 
@@ -36,7 +40,7 @@ type Article struct {
 	Plugin   plugin
 }
 
-func ArticleScanner(fullName string) (Article, error) {
+func ArticleScanner(fullName string, options config.Options) (Article, error) {
 	var article Article
 
 	var metadataStr string
@@ -56,6 +60,8 @@ func ArticleScanner(fullName string) (Article, error) {
 	if contentLen > 1 {
 		ContentStr = markdownStr[1]
 	}
+
+	article.URL = options.Root + "/" + path.Join()
 	// Parse article markdown content
 	if err := yaml.Unmarshal([]byte(metadataStr), &article.Metadata); err != nil {
 		return article, fmt.Errorf("%s:%v", fullName, err)
@@ -63,10 +69,16 @@ func ArticleScanner(fullName string) (Article, error) {
 
 	overviewStr := strings.SplitN(ContentStr, MORE_SPLIT, 2)
 	if len(overviewStr) > 1 {
-		article.Overview = template.HTML(overviewStr[0])
+		article.Overview = MD2HTML(overviewStr[0])
 	}
 
-	article.Content = template.HTML(ContentStr)
+	article.Content = MD2HTML(ContentStr)
 
 	return article, nil
+}
+
+func MD2HTML(origin string) template.HTML {
+	unsafeOverview := blackfriday.Run([]byte(origin))
+	htmlSourceOverview := bluemonday.UGCPolicy().SanitizeBytes(unsafeOverview)
+	return template.HTML(htmlSourceOverview)
 }

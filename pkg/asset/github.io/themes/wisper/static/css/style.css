@@ -1,0 +1,290 @@
+html,
+body {
+  height: auto;
+  min-height: 100%;
+}
+
+html {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+}
+
+body {
+  font-family: "Comic Neue";
+  line-height: 1.5;
+  font-size: 100%;
+  color: #333;
+  margin: 0;
+  background-color: white;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+.site {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.site-wrap {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
+
+.site-header {
+  text-align: center;
+}
+.site-header .site-nav {
+  text-align: center;
+}
+.site-header {
+  background-image: url("/images/header.png");
+}
+.site-header {
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+}
+.site-header a {
+  color: #84172d;
+  font-size: 1.5rem;
+  text-decoration: none;
+}
+.site-header .site-title {
+  font-size: 1.25rem;
+}
+.site-nav {
+  margin-top: 1rem;
+}
+.site-header nav a {
+  color: #666;
+}
+.site-header nav a:hover,
+.site-header nav a:focus,
+.site-header nav a:active {
+  color: #444;
+  opacity: 1;
+}
+.site-nav a + a {
+  margin-left: 1em;
+}
+.measure {
+  margin: 0 auto;
+  max-width: 42rem;
+}
+
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  display: table;
+}
+.clearfix:after {
+  clear: both;
+}
+
+.site-context {
+  text-align: center;
+}
+
+.posts .post {
+  margin-bottom: 0.75em;
+  
+}
+.posts .post:last-child {
+  border-bottom: none;
+  margin-bottom: 0.375em;
+  padding-bottom: 0;
+}
+
+.post-title {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 1.25rem;
+  
+}
+
+.post-title .post-title-link {
+  font-weight: 600;
+  color: #333;
+}
+
+.site-header a:hover,
+.posts .post a:hover .post-meta,
+.posts .post a:hover .post-title,
+.posts .post a:hover .post-summary {
+  opacity: 0.88;
+}
+
+.post-meta {
+  width: auto;
+  font-weight: 300;
+  margin: 0;
+  padding: 0.55em 0;
+  color: #7a7a7a;
+  font-style: normal;
+  font-size: 14px;
+  text-align: center;
+}
+.post-summary {
+  margin-top: 10px;
+}
+
+.post-button {
+  text-align: center;
+}
+
+.post-footer{
+  margin-top: 40px;
+}
+
+.post-eof {
+  height: 1px;
+  border-top: 1px solid #e2e2e2;
+}
+
+.page-nav {
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.page-nav > nav a,
+.page-nav > nav .curr-page{
+  display: inline-block;
+  border-radius: 3px;
+  padding: 4px 10px 5px;
+}
+
+.page-nav .page-number {
+  display: inline-block;
+}
+.page-nav>nav .curr-page{
+  color: #fff;
+  background: #ccc;
+  border-color: #ccc;
+}
+
+.post-footer{
+  text-align: left;
+}
+
+.post-tags {
+  text-align: center;
+}
+
+.post-nav{
+  margin-top: 1rem;
+  display: flex;
+}
+
+.post-nav-item{
+  margin-top: 0.7rem;
+  flex: 1;
+}
+.post-nav-item:last-child{
+text-align: right;
+}
+.post-nav-item a{
+  border-bottom: 0;
+  display: block;
+  font-size: 0.875em;
+  line-height: 1.6;
+}
+
+footer {
+  color: #7a7a7a;
+  width: 100%;
+  margin-top: 25px;
+  bottom: 15px;
+  text-align: center;
+  font-size: 13px;
+}
+
+footer > div > a {
+  font-style: italic;
+  text-decoration: none;
+  color: #7a7a7a;
+}
+
+@media (min-width: 52em) {
+  .h00-responsive {
+    font-size: 8vw;
+  }
+  .h0-responsive {
+    font-size: 6vw;
+  }
+  .h1-responsive {
+    font-size: 4vw;
+  }
+}
+@media (min-width: 96em) {
+  .h00-responsive {
+    font-size: 7.68rem;
+  }
+  .h0-responsive {
+    font-size: 5.76rem;
+  }
+  .h1-responsive {
+    font-size: 3.84rem;
+  }
+}
+
+@media screen and (min-width: 32em) {
+  html {
+    font-size: 16px;
+  }
+  h1,
+  .h1 {
+    font-size: 1.5rem;
+  }
+  .site-header {
+    text-align: left;
+  }
+  .site-nav {
+    margin-top: 0;
+  }
+  .site-header a {
+    font-size: 0.875rem;
+  }
+  .site-header .site-title {
+    font-size: 1rem;
+    float: left;
+  }
+  .site-header .site-nav {
+    float: right;
+    margin-top: 0.25rem;
+  }
+  blockquote {
+    margin-left: 2rem;
+    padding: 2rem;
+  }
+  .social-icons-left {
+    text-align: left;
+  }
+  .social-icons-right {
+    text-align: right;
+  }
+}
+@media screen and (min-width: 48em) {
+  html {
+    font-size: 18px;
+  }
+}
+@media screen and (min-width: 64em) {
+  html {
+    font-size: 20px;
+  }
+}
+@media screen and (min-width: 78em) {
+  em img {
+    max-width: 56rem;
+    margin-left: -7em;
+  }
+}

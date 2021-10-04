@@ -13,16 +13,20 @@ import (
 
 var (
 	articles, pages uint64
-	wispeeer        tools.Wispeeer
-	articleList     []tools.Article
 )
 
 func (c *CMD) Generate() error {
 	var err error
 
+	// Init Articles
+	c.Wispeeer.Blog.Article = make([]tools.Article, 0)
+	c.Wispeeer.Blog.Options = c.Options
+	c.Wispeeer.Init()
+
 	// clear old public
 	tools.FileRemove(c.Options.PublicDir)
 
+	// copt static asset
 	staticAssets := path.Join(c.ThemeStr, c.Options.Theme, c.StaticStr)
 	if utils.IsExist(staticAssets) {
 		loger.Task("generate").Info("copy static assets")
@@ -35,30 +39,24 @@ func (c *CMD) Generate() error {
 	loger.Task("generate").Infof("public in: %v", c.Options.PublicDir)
 
 	// kids! run
-	err = c.render(c.Options.SourceDir)
+	err = c.processor(c.Options.SourceDir)
 	if err != nil {
 		return err
 	}
-	loger.Task("page").Infof("Pages  : %d (Total)\n", pages)
-	loger.Task("article").Infof("Articles  : %d (Total)\n", articles)
+	loger.Task("articles").Infof("Total:%2d (Articles:%d)\n", articles+pages, articles)
 
+	// article pagination
+	c.Wispeeer.Blog.Articles = articles
+	c.Wispeeer.Blog.Pages = pages
 	dst := path.Join(c.Options.PublicDir, c.Options.PaginationDir)
-	tmpl := path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, "post.html")
-	err = tools.ArticleListRender(articleList, &c.Options, tmpl, dst)
-	if err != nil {
-		return err
-	}
-
-	tmpl = path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr, "index.html")
-	dst = path.Join(c.Options.PublicDir, "index.html")
-	err = tools.IndexRender(tmpl, dst, &c.Options)
+	err = c.Wispeeer.ArticlesPaginationRender(dst)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *CMD) render(startDIR string) error {
+func (c *CMD) processor(startDIR string) error {
 	files, err := ioutil.ReadDir(startDIR)
 	if err != nil {
 		return err
@@ -78,12 +76,12 @@ func (c *CMD) render(startDIR string) error {
 					return err
 				}
 			}
+
 			suffix := path.Ext(f.Name())
 			title := strings.TrimSuffix(f.Name(), suffix)
-
 			if pathLevel == 2 && suffix == ".md" {
-				// process markdown
-				err = c.processor(filefullName, title)
+				// render markdown
+				err = c.render(filefullName, title)
 				if err != nil {
 					return err
 				}
@@ -92,7 +90,7 @@ func (c *CMD) render(startDIR string) error {
 			if pathLevel == 2 {
 				continue
 			}
-			err := c.render(filefullName)
+			err := c.processor(filefullName)
 			if err != nil {
 				return err
 			}
@@ -101,46 +99,39 @@ func (c *CMD) render(startDIR string) error {
 	return nil
 }
 
-func (c *CMD) processor(src string, title string) error {
-	article, err := tools.ArticleScanner(src)
+func (c *CMD) render(src string, title string) error {
+	article, err := tools.ArticleScanner(src, c.Options)
 	if err != nil {
 		return err
 	}
 	assetsPath := path.Join(strings.TrimRight(src, ".md"))
-	layoutPath := path.Join(c.ThemeStr, c.Options.Theme, c.LayoutStr)
-	tmpl := path.Join(layoutPath, c.Options.ArticleDir+".html")
-
-	wispeeer.Article = article
-	wispeeer.Options = c.Options
-
+	// post & page
 	if title != c.IndexStr {
-		// process articles
+		// render articles
 		articles++
+		c.Wispeeer.Blog.Article = append(c.Wispeeer.Blog.Article, article)
+
 		dst := path.Join(c.Options.PublicDir, c.Options.Permalink)
-		err = tools.ArticleRender(wispeeer, tmpl, path.Join(dst, title+".html"))
+		err = c.Wispeeer.ArticleDetailRender(article, path.Join(dst, title+".html"))
 		if err != nil {
 			return err
 		}
+
 		if utils.IsDir(assetsPath) {
 			err = tools.DirCopy(assetsPath, path.Join(dst, title))
 			if err != nil {
 				return err
 			}
 		}
-		articleList = append(articleList, article)
 	} else {
-		// process other page
+		// render other page
 		pages++
-		recomandTmpl := path.Join(layoutPath, article.Metadata.Title+".html")
-		if utils.IsExist(recomandTmpl) {
-			tmpl = recomandTmpl
-		}
-
 		dst := path.Join(c.Options.PublicDir, article.Metadata.Title)
-		err = tools.PageRender(wispeeer, tmpl, path.Join(dst, "index.html"))
+		err = c.Wispeeer.PageDetailRender(article, path.Join(dst, "index.html"))
 		if err != nil {
 			return err
 		}
+
 		if utils.IsDir(assetsPath) {
 			err = tools.DirCopy(assetsPath, path.Join(dst, article.Metadata.Title))
 			if err != nil {
@@ -148,6 +139,5 @@ func (c *CMD) processor(src string, title string) error {
 			}
 		}
 	}
-
 	return nil
 }

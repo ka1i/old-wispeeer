@@ -1,3 +1,29 @@
 /* 实现页面灰度 * {
   filter: grayscale(100%);
 } */
+
+.post-body a {
+  border-bottom: 1px solid #999;
+  color: rgb(85 85 85);
+  outline: 0;
+  overflow-wrap: break-word;
+  background: transparent;
+}
+
+.btn {
+  padding: 3px 15px;
+  color: #34495e!important;
+  box-shadow: 0 0 0 1px #34495e;
+  border: 1px;
+  border-radius: 15px;
+  position: relative!important;
+  text-decoration: none!important;
+  transition: color .3s ease-in-out;
+  display: inline-block;
+  line-height: 2;
+}
+.btn:hover{
+  color: #fff!important;
+  border-color: #222;
+  background: #34495e;
+}

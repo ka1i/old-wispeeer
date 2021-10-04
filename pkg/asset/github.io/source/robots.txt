@@ -10,4 +10,4 @@ Disallow: /lib/
 Disallow: /images/
 Disallow: /about/
 
-Sitemap: http://www.mardan.com/sitemap.xml
+Sitemap: /sitemap.xml

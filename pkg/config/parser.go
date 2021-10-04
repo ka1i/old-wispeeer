@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"html/template"
 	"io/ioutil"
 
 	"gopkg.in/yaml.v3"
@@ -18,19 +19,19 @@ type Options struct {
 
 // Site ...
 type Site struct {
-	Title       string `yaml:"title" default:"Welcome to wisper"`
-	Subtitle    string `yaml:"subtitle" default:"wispeeer wisper"`
-	Description string `yaml:"description" default:"Generate by Wispeeer"`
-	Keywords    string `yaml:"keywords" default:"blog"`
-	Author      string `yaml:"author" default:"void"`
-	Theme       string `yaml:"theme" default:"wisper"`
-	Language    string `yaml:"language" default:"en"`
-	Timezone    string `yaml:"timezone" default:"Local"`
+	Title       string        `yaml:"title" default:"Welcome to wisper"`
+	Subtitle    string        `yaml:"subtitle" default:"wispeeer wisper"`
+	Description template.HTML `yaml:"description" default:"Generate by Wispeeer"`
+	Keywords    string        `yaml:"keywords" default:"blog"`
+	Author      string        `yaml:"author" default:"void"`
+	Theme       string        `yaml:"theme" default:"wisper"`
+	Language    string        `yaml:"language" default:"en"`
+	Timezone    string        `yaml:"timezone" default:"Local"`
 }
 
 // Urls ...
 type Urls struct {
-	Root      string `yaml:"root" default:"http://localhost:1080"`
+	Root      string `yaml:"root" default:"http://localhost:4180"`
 	Permalink string `yaml:"permalink" default:"website"`
 }
 

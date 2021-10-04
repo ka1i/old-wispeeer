@@ -13,14 +13,11 @@ make
 ```
 
 ## Theme 
-注：对于页面模板，你也可以直接创建像这样：`about.html`模板，这样程序会转而使用首先此模板，而不再使用`page.html`
+[wisper](https://github.com/Wispeeer/wisper)
 
-主题需包含以下模板
-```
-index.html # 文章列
-post.html # 文章渲染模板
-page.html # 页面：比如about，渲染模板
-```
+## 默认渲染规则
++ 文章详情  Article     *.html ---> /webiste/*.html
++ 文章列表  []Article   index.html ---> /index.html, [2,3].html ---> /articles/*
 
 ## tree public
 public
@@ -28,7 +25,6 @@ public
 ├── about
 │   └── index.html
 ├── articles
-│   ├── index.html
 │   ├── 2.html
 │   └── 3.html
 ├── links

@@ -2,7 +2,7 @@
 title: Welcome to wisper
 subtitle: wispeeer wisper
 description: 'Generate by Wispeeer<br> <a href="https://github.com/Wispeeer/wispeeer">wispeeer</a>.'
-keywords: ''
+keywords: IT, CS
 author: Mardan M
 language: en
 timezone: Asia/Shanghai
@@ -14,11 +14,11 @@ permalink: website
 # Directory
 source_dir: source
 public_dir: public
-article_dir: article
+article_dir: post
 
 # Pagination
 per_page: 9
-pagination_dir: page
+pagination_dir: articles
 
 ## Themes
 theme: wisper
