@@ -24,7 +24,7 @@ func (c *CMD) Initialzation(title string) error {
 	var storage = assets.GetStorage()
 	fs := storage.Fs
 	root := storage.Root
-	err = tools.AssetsUnpkg(&fs, root, root, title)
+	err = tools.EmbedUnpkg(&fs, root, root, title)
 	if err != nil {
 		return err
 	}

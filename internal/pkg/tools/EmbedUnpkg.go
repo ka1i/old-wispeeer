@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 )
 
-func AssetsUnpkg(fs *embed.FS, root, start, title string) error {
+func EmbedUnpkg(fs *embed.FS, root, start, title string) error {
 	assets, err := fs.ReadDir(start)
 	if err != nil {
 		return err
@@ -24,7 +24,7 @@ func AssetsUnpkg(fs *embed.FS, root, start, title string) error {
 		}
 		// process embed assets
 		if file.IsDir() {
-			err := AssetsUnpkg(fs, root, path.Join(start, file.Name()), title)
+			err := EmbedUnpkg(fs, root, path.Join(start, file.Name()), title)
 			if err != nil {
 				return err
 			}

@@ -72,3 +72,12 @@ func IsDir(path string) bool {
 func IsFile(path string) bool {
 	return !IsDir(path)
 }
+
+// SplitPage ...
+func SplitPage(t int) int {
+	n := int(t / 9)
+	if t%9 == 0 {
+		return n
+	}
+	return n + 1
+}

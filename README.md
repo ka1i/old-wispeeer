@@ -19,6 +19,15 @@ make
 + 文章详情  Article     *.html ---> /webiste/*.html
 + 文章列表  []Article   index.html ---> /index.html, [2,3].html ---> /articles/*
 
+默认规则：
+```
+2 {{ .PublicDir }}/{{ .PaginationDir }}/1.html {{ .PublicDir }}/index.html
+```
+第一列序号：渲染模式
+第二列路径：愿渲染文件路径
+第三列路径：修改后的目标路径
+如果想要修改默认渲染规则，可以在主题文件夹下创建rule.txt，来自定义渲染规则。
+
 ## tree public
 ```
 public
