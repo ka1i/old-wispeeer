@@ -15,7 +15,6 @@ type rt struct {
 	Options      *config.Options
 	Template     *template.Template
 	totalArticle int
-	GP           GlobalVariable
 }
 
 func InitRT() *rt {

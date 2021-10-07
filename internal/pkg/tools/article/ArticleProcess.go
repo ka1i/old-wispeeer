@@ -16,11 +16,6 @@ import (
 	"github.com/ka1i/wispeeer/pkg/config"
 )
 
-type GlobalVariable struct {
-	Article  Article
-	Articles []Article
-}
-
 func (rt *rt) ArticleDetailRender(article Article, dst string) error {
 	filePath := filepath.Dir(dst)
 	if !utils.IsExist(filePath) {
@@ -93,7 +88,6 @@ func (rt *rt) ArticlesPaginationRender() error {
 			rule := strings.Fields(v)
 			if len(rule) == 3 {
 				if rule[0] == "2" {
-					fmt.Println(len(rule), rule)
 					match, err := filepath.Match(rule[1], tdst)
 					if err != nil {
 						return err

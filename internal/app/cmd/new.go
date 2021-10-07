@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path"
 
+	"github.com/ka1i/wispeeer/internal/pkg/gvs"
 	"github.com/ka1i/wispeeer/internal/pkg/tools"
 	"github.com/ka1i/wispeeer/internal/pkg/utils"
 )
@@ -31,7 +32,7 @@ func (c *CMD) NewPage(title string) error {
 
 	utils.CheckDir(path.Join(c.Options.SourceDir, title))
 
-	var safeName = c.IndexMarkdownTitleStr
+	var safeName = gvs.IndexMarkdownTitleStr
 	var filePath = path.Join(c.Options.SourceDir, title, safeName)
 	if utils.IsExist(filePath) {
 		return fmt.Errorf("page %v is exist", safeName)

@@ -7,20 +7,14 @@ import (
 )
 
 type CMD struct {
-	Options               config.Options
-	Articles              []string
-	IndexMarkdownTitleStr string
-	ThemeStr              string
-	StaticStr             string
+	Options  config.Options
+	Articles []string
 }
 
 func Run() *CMD {
 	loger.Task("wispeeer").Infof("Location : %v", utils.GetWorkspace())
 	return &CMD{
-		Options:               config.Configure.Options,
-		Articles:              make([]string, 0),
-		IndexMarkdownTitleStr: "index.md",
-		ThemeStr:              "themes",
-		StaticStr:             "static",
+		Options:  config.Configure.Options,
+		Articles: make([]string, 0),
 	}
 }

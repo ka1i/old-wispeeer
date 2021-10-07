@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 
@@ -36,6 +37,7 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fs := http.FileServer(http.Dir("public"))
 	fs.ServeHTTP(w, r)
 
-	fmt.Printf("%v ---> %v %v %v ", r.RemoteAddr, r.Proto, r.Method, r.RequestURI)
+	requestsURL, _ := url.QueryUnescape(r.RequestURI)
+	fmt.Printf("%v ---> %v %v %s ", r.RemoteAddr, r.Proto, r.Method, requestsURL)
 	fmt.Println(time.Since(start))
 }

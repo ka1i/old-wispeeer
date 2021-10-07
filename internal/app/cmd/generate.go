@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/ka1i/wispeeer/internal/pkg/gvs"
 	"github.com/ka1i/wispeeer/internal/pkg/tools"
 	"github.com/ka1i/wispeeer/internal/pkg/tools/article"
 	"github.com/ka1i/wispeeer/internal/pkg/utils"
@@ -19,7 +20,7 @@ func (c *CMD) Generate() error {
 	tools.FileRemove(c.Options.PublicDir)
 
 	// copt static asset
-	staticAssets := path.Join(c.ThemeStr, c.Options.Theme, c.StaticStr)
+	staticAssets := path.Join(gvs.ThemeStr, c.Options.Theme, gvs.StaticStr)
 	if utils.IsExist(staticAssets) {
 		loger.Task("generate").Info("copy static assets")
 		err = tools.DirCopy(staticAssets, c.Options.PublicDir)
@@ -68,6 +69,7 @@ func (c *CMD) processor(startDIR string) error {
 
 			suffix := path.Ext(f.Name())
 			if pathLevel == 2 && suffix == ".md" {
+				// parser article && cache article
 				c.Articles = append(c.Articles, filefullName)
 			}
 		} else {
