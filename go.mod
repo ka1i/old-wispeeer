@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/creasty/defaults v1.5.2
-	github.com/microcosm-cc/bluemonday v1.0.15
+	github.com/microcosm-cc/bluemonday v1.0.16
 	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/sirupsen/logrus v1.8.1
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
